@@ -290,17 +290,17 @@ a.secondary {
 .panelContent {
   display: flex;
   gap: 32px;
-  font-size: 18px;
-  font-weight: 500;
+  font-size: 22px;
+  font-weight: 600;
   padding-top: 20px;
 }
 
 .navButton {
   background: none;
   border: none;
-  font-size: 15px;
-  font-weight: 100;
-  font-family: ;
+  font-size: 16px;
+  font-weight: 400;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   cursor: pointer;
   color: inherit;
   transition: color 0.2s;
@@ -308,4 +308,96 @@ a.secondary {
 
 .navButton:hover {
   color: #0070f3;
+}
+
+.pageEnter {
+  opacity: 0;
+  transform: translateY(30px);
+  animation: fadeInUp 0.6s ease-out forwards;
+}
+
+@keyframes fadeInUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.featuresSection {
+  display: flex;
+  flex-direction: column;
+  gap: 64px;
+  margin: 80px auto;
+  width: 100%;
+  max-width: 1400px;
+  padding: 0 40px;
+}
+
+.card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 64px;
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+}
+
+.cardText {
+  max-width: 500px;
+}
+
+.cardText h2 {
+  font-size: 28px;
+  margin-bottom: 16px;
+}
+
+.cardText p {
+  font-size: 18px;
+  color: #555;
+}
+
+.card.fromLeft {
+  transform: translateX(-100px);
+}
+
+.card.fromRight {
+  transform: translateX(100px);
+}
+
+@keyframes slideInLeft {
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideInRight {
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.reveal {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: all 0.6s ease-out;
+}
+
+.revealVisible {
+  opacity: 1;
+  transform: translateY(0);
+} 
+
+.card.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.services{
+  font-weight: 600;
+  font-size: 42;
+  margin-left: 550px;
+  margin-top: 140px;
 }
