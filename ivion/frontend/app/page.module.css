@@ -1,8 +1,9 @@
+/* ==== VARIABLES Y BASE ==== */
+
 .page {
   --gray-rgb: 255, 255, 255;
   --gray-alpha-200: rgba(var(--gray-rgb), 0.08);
   --gray-alpha-100: rgba(var(--gray-rgb), 0.05);
-
   --button-primary-hover: #e0e0e0;
   --button-secondary-hover: #f5f5f5;
 
@@ -11,10 +12,10 @@
   align-items: start;
   justify-items: center;
 
-  width: 100%;
   min-height: 100vh;
+  width: 100%;
+  padding: 24px;
   gap: 64px;
-  padding: 0 16px;
   background-color: var(--background);
   color: var(--foreground);
 }
@@ -25,8 +26,7 @@
   gap: 32px;
   grid-row-start: 2;
   width: 100%;
-  max-width: 1280px;
-  margin: 0 auto;
+  max-width: 1440px;
   padding: 0 16px;
 }
 
@@ -63,7 +63,6 @@
   border-radius: 128px;
   height: 48px;
   padding: 0 20px;
-  border: none;
   border: 1px solid transparent;
   transition: background 0.2s, color 0.2s, border-color 0.2s;
   cursor: pointer;
@@ -89,11 +88,11 @@ a.secondary {
 .footer {
   grid-row-start: 3;
   display: flex;
-  gap: 24px;
   flex-wrap: wrap;
+  gap: 24px;
+  align-items: center;
   justify-content: center;
   width: 100%;
-  padding: 16px;
 }
 
 .footer a {
@@ -108,96 +107,22 @@ a.secondary {
 
 .mainTitle {
   font-weight: 600;
-  font-size: 2rem;
+  font-size: 28px;
   text-align: center;
 }
 
 .partner {
-  margin-left: auto;
-}
-
-@media (hover: hover) and (pointer: fine) {
-  a.primary:hover {
-    background: var(--button-primary-hover);
-    border-color: transparent;
-  }
-
-  a.secondary:hover {
-    background: var(--button-secondary-hover);
-    border-color: transparent;
-  }
-
-  .footer a:hover {
-    text-decoration: underline;
-    text-underline-offset: 4px;
-  }
-}
-
-@media (max-width: 768px) {
-  .page {
-    padding: 16px;
-  }
-
-  .main {
-    align-items: center;
-    padding: 0 8px;
-  }
-
-  .main ol {
-    text-align: center;
-  }
-
-  .ctas {
-    flex-direction: column;
-  }
-
-  .ctas a {
-    font-size: 14px;
-    height: 40px;
-    padding: 0 16px;
-  }
-
-  a.secondary {
-    min-width: auto;
-  }
-
-  .footer {
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .featuresSection {
-    padding: 0 8px;
-  }
-
-  .card {
-    flex-direction: column;
-    text-align: center;
-  }
-
-  .card img {
-    width: 100%;
-    height: auto;
-  }
-}
-
-@media (prefers-color-scheme: dark) {
-  .apple, .partner {
-    filter: invert();
-  }
+  display: none;
 }
 
 .ivionLogo {
-  height: 120px;
-  width: 600px;
-  float: left;
+  height: auto;
+  width: 200px;
 }
 
 .nav {
   width: 100%;
-  margin: 0 auto;
-  padding: 2px 16px;
+  padding: 2px 24px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -209,9 +134,159 @@ a.secondary {
   flex-wrap: wrap;
 }
 
+.nav ul {
+  list-style: none;
+  display: flex;
+  gap: 24px;
+  margin: 0;
+  padding: 0;
+  flex-wrap: wrap;
+}
+
+.nav li a {
+  text-decoration: none;
+  color: inherit;
+  font-weight: 500;
+  font-size: 16px;
+  transition: color 0.2s;
+}
+
+.nav li a:hover {
+  color: #0070f3;
+}
+
+.navButton {
+  background: none;
+  border: none;
+  font-size: 16px;
+  font-weight: 400;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  cursor: pointer;
+  color: inherit;
+  transition: color 0.2s;
+}
+
+.navButton:hover {
+  color: #0070f3;
+}
+
 .imagen {
-  margin-left: 0;
   margin-top: 2px;
+}
+
+.dropdownPanel {
+  position: fixed;
+  top: 80px;
+  left: 0;
+  width: 100%;
+  background: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  padding: 40px 24px;
+  z-index: 999;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+}
+
+.closeButton {
+  position: absolute;
+  top: 16px;
+  right: 24px;
+  background: none;
+  border: none;
+  font-size: 24px;
+  color: #333;
+  cursor: pointer;
+}
+
+.panelContent {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+  font-size: 20px;
+  font-weight: 600;
+  padding-top: 20px;
+}
+
+.pageEnter {
+  opacity: 0;
+  transform: translateY(30px);
+  animation: fadeInUp 0.6s ease-out forwards;
+}
+
+@keyframes fadeInUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.featuresSection {
+  display: flex;
+  flex-direction: column;
+  gap: 64px;
+  margin-top: 90px;
+  width: 100%;
+  max-width: 1200px;
+  padding: 0 16px;
+}
+
+.card1,
+.card3 {
+  max-width: 1200px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 32px;
+  flex-wrap: wrap;
+  margin-left: 0px;
+}
+
+.card2 {
+  max-width: 1200px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 32px;
+  flex-wrap: wrap;
+  margin: auto;
+}
+
+
+.cardText {
+  flex: 1;
+  min-width: 280px;
+}
+
+.cardText h2 {
+  font-size: 24px;
+  margin-bottom: 12px;
+}
+
+.cardText p {
+  font-size: 16px;
+  color: #555;
+}
+
+.card img {
+  max-width: 100%;
+  width: 600px;
+  height: auto;
+  border-radius: 12px;
+  object-fit: cover;
+}
+
+.card3 .imgSmall {
+  width: 800px;
+}
+.services {
+  font-weight: 600;
+  font-size: 32px;
+  margin: 80px auto 40px;
+  text-align: center;
 }
 
 .divider {
@@ -252,181 +327,129 @@ a.secondary {
   transform: translateY(0);
 }
 
-.nav ul {
-  list-style: none;
-  display: flex;
-  gap: 24px;
-  margin: 0;
-  padding: 0;
-  flex-wrap: wrap;
-}
-
-.nav li a {
-  text-decoration: none;
-  color: inherit;
-  font-weight: 500;
-  font-size: 16px;
-  transition: color 0.2s;
-}
-
-.nav li a:hover {
-  color: #0070f3;
-}
-
-.dropdownPanel {
-  position: fixed;
-  top: 80px;
-  left: 0;
-  width: 100vw;
-  height: auto;
-  background: rgba(255, 255, 255, 0.75);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
-  padding: 40px 16px;
-  z-index: 999;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: flex-start;
-  animation: fadeDown 0.4s ease forwards;
-}
-
-@keyframes fadeDown {
-  from {
-    opacity: 0;
-    transform: translateY(-12px);
+@media (hover: hover) and (pointer: fine) {
+  a.primary:hover {
+    background: var(--button-primary-hover);
+    border-color: transparent;
   }
-  to {
-    opacity: 1;
-    transform: translateY(0);
+
+  a.secondary:hover {
+    background: var(--button-secondary-hover);
+    border-color: transparent;
+  }
+
+  .footer a:hover {
+    text-decoration: underline;
+    text-underline-offset: 4px;
   }
 }
 
-.closeButton {
-  position: absolute;
-  top: 16px;
-  right: 24px;
-  background: none;
-  border: none;
-  font-size: 24px;
-  color: #333;
-  cursor: pointer;
-}
-
-.panelContent {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 24px;
-  font-size: 22px;
-  font-weight: 600;
-  padding-top: 20px;
-}
-
-.navButton {
-  background: none;
-  border: none;
-  font-size: 16px;
-  font-weight: 400;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  cursor: pointer;
-  color: inherit;
-  transition: color 0.2s;
-}
-
-.navButton:hover {
-  color: #0070f3;
-}
-
-.pageEnter {
-  opacity: 0;
-  transform: translateY(30px);
-  animation: fadeInUp 0.6s ease-out forwards;
-}
-
-@keyframes fadeInUp {
-  to {
-    opacity: 1;
-    transform: translateY(0);
+@media (prefers-color-scheme: dark) {
+  .apple, .partner {
+    filter: invert();
   }
 }
 
-.featuresSection {
-  display: flex;
-  flex-direction: column;
-  gap: 64px;
-  margin: 80px auto;
-  width: 100%;
-  max-width: 1400px;
-  padding: 0 16px;
-}
+@media (max-width: 768px) {
+  .main {
+    gap: 24px;
+    padding: 0 12px;
+  }
 
-.card {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: 32px;
-  opacity: 0;
-  transform: translateY(40px);
-  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
-}
+  .mainTitle {
+    font-size: 22px;
+  }
 
-.cardText {
-  max-width: 500px;
-}
+  .ctas {
+    flex-direction: column;
+    align-items: stretch;
+  }
 
-.cardText h2 {
-  font-size: clamp(1.5rem, 2vw, 2rem);
-  margin-bottom: 16px;
-}
+  .ctas a {
+    width: 100%;
+    justify-content: center;
+  }
 
-.cardText p {
-  font-size: clamp(1rem, 1.5vw, 1.125rem);
-  color: #555;
-}
+  .featuresSection {
+    gap: 48px;
+    padding: 0 12px;
+  }
 
-.card.fromLeft {
-  transform: translateX(-100px);
-}
+  .card {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
 
-.card.fromRight {
-  transform: translateX(100px);
-}
+  .card img {
+    width: 100%;
+    max-width: 320px;
+    height: auto;
+  }
 
-@keyframes slideInLeft {
-  to {
-    transform: translateX(0);
-    opacity: 1;
+  .cardText h2 {
+    font-size: 20px;
+  }
+
+  .cardText p {
+    font-size: 14px;
+  }
+
+  .services {
+    font-size: 24px;
+    margin: 40px 0;
+  }
+
+  .divider {
+    width: 100%;
+  }
+
+  .dropdownPanel {
+    padding: 24px;
+    height: auto;
+  }
+
+  .panelContent {
+    flex-direction: column;
+    gap: 16px;
+    font-size: 18px;
+  }
+
+  .nav ul {
+    justify-content: center;
+    gap: 12px;
+  }
+
+  .nav {
+    flex-direction: column;
+    gap: 12px;
+    align-items: center;
+    padding: 12px;
+  }
+
+  .imagen {
+    margin-left: 0;
+  }
+
+  .partner {
+    display: none;
+  }
+
+  .ivionLogo {
+    width: 160px;
+  }
+
+  .footer {
+    flex-direction: column;
+    gap: 16px;
+    padding: 16px;
   }
 }
 
-@keyframes slideInRight {
-  to {
-    transform: translateX(0);
-    opacity: 1;
-  }
-}
-
-.reveal {
-  opacity: 0;
-  transform: translateY(40px);
-  transition: all 0.6s ease-out;
-}
-
-.revealVisible {
-  opacity: 1;
-  transform: translateY(0);
-} 
-
+.fromLeft,
+.fromRight,
+.reveal,
+.revealVisible,
 .card.visible {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-.services {
-  font-weight: 600;
-  font-size: clamp(1.8rem, 3vw, 2.625rem);
-  text-align: center;
-  margin: 140px auto 40px;
+  all: unset;
 }

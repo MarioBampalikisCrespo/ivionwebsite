@@ -1,9 +1,8 @@
-"use client"
+"use client";
 
-import { useState, useRef } from "react";
+import { useState } from "react";
 import Image from "next/image";
 import styles from "./page.module.css";
-import useRevealOnScroll  from "../hooks/useRevealOnScroll";
 
 export default function Home() {
   const [activePanel, setActivePanel] = useState<"productos" | "servicios" | null>(null);
@@ -11,14 +10,6 @@ export default function Home() {
   const togglePanel = (panel: "productos" | "servicios") => {
     setActivePanel((prev) => (prev === panel ? null : panel));
   };
-
-  const card1Ref = useRef<HTMLDivElement | null>(null);
-  const card2Ref = useRef<HTMLDivElement | null>(null);
-  const card3Ref = useRef<HTMLDivElement | null>(null);
-
-  const card1Visible = useRevealOnScroll(card1Ref);
-  const card2Visible = useRevealOnScroll(card2Ref);
-  const card3Visible = useRevealOnScroll(card3Ref);
 
   return (
     <div className={styles.page}>
@@ -49,7 +40,7 @@ export default function Home() {
 
       {activePanel && (
         <div className={styles.dropdownPanel}>
-          <button className={styles.closeButton} onClick={() => setActivePanel(null)}>\u2715</button>
+          <button className={styles.closeButton} onClick={() => setActivePanel(null)}>×</button>
           {activePanel === "productos" && (
             <div className={styles.panelContent}>
               <a href="#iphone">iPhone</a>
@@ -62,7 +53,7 @@ export default function Home() {
             <div className={styles.panelContent}>
               <p>Reparaciones</p>
               <p>Mantenimiento</p>
-              <p>Diagn\u00f3stico</p>
+              <p>Diagnóstico</p>
             </div>
           )}
         </div>
@@ -81,28 +72,26 @@ export default function Home() {
           <h1 className={styles.mainTitle}>iVion. Excelencia Apple, sin complicaciones</h1>
         </div>
         <p>Calidad Apple, a precios razonables</p>
-        <p>\u00bfTienes problemas con tu dispositivo? \u00a1Tr\u00e1enoslo! Lo revisaremos encantados</p>
+        <p>¿Tienes problemas con tu dispositivo? ¡Tráenoslo! Lo revisaremos encantados</p>
 
         <div className={styles.ctas}>
           <a
             className={styles.primary}
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+            href="#catalogo"
           >
             <Image
               className={styles.apple}
               src="/apple-logo.svg"
-              alt="Vercel logomark"
+              alt="Apple logo"
               width={20}
               height={20}
             />
-            Explora nuestro cat\u00e1logo
+            Explora nuestro catálogo
           </a>
         </div>
 
         <div className={styles.divider}>
-          <p className={styles.info}>M\u00e1s informaci\u00f3n</p>
+          <p className={styles.info}>Más información</p>
           <div className={styles.arrow}>
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -117,83 +106,44 @@ export default function Home() {
         </div>
 
         <section className={styles.featuresSection}>
-          <div
-            ref={card1Ref}
-            className={`${styles.card} ${styles.fromLeft} ${styles.reveal} ${card1Visible ? styles.revealVisible : ""}`}
-          >
+          <div className={styles.card1}>
             <Image src="/iphone_offer.jpg" alt="Oferta iPhone" width={700} height={500} />
             <div className={styles.cardText}>
-              <h2>\u00bfTel\u00e9fono viejo?</h2>
-              <p>En iVion tu nuevo iPhone te espera con precios que no creer\u00e1s.</p>
+              <h2>¿Teléfono viejo?</h2>
+              <p>En iVion tu nuevo iPhone te espera con precios que no creerás.</p>
             </div>
           </div>
 
-          <div
-            ref={card2Ref}
-            className={`${styles.card} ${styles.fromRight} ${styles.reveal} ${card2Visible ? styles.revealVisible : ""}`}
-          >
+          <div className={styles.card2}>
             <div className={styles.cardText}>
-              <h2>Servicio t\u00e9cnico autorizado</h2>
-              <p>Reparamos tu dispositivo Apple con piezas originales y garant\u00eda oficial.</p>
+              <h2>Servicio técnico autorizado</h2>
+              <p>Reparamos tu dispositivo Apple con piezas originales y garantía oficial.</p>
             </div>
-            <Image src="/repair_service.jpg" alt="Servicio t\u00e9cnico" width={700} height={500} />
+            <Image src="/repair_service.jpg" alt="Servicio técnico" width={700} height={500} />
           </div>
 
-          <div
-            ref={card3Ref}
-            className={`${styles.card} ${styles.fromLeft} ${styles.reveal} ${card3Visible ? styles.revealVisible : ""}`}
-          >
-            <Image src="/online_store.jpg" alt="Tienda online" width={500} height={300} />
+          <div className={styles.card3}>
+            <Image src="/online_store.jpg" alt="Tienda online" width={500} height={300} className={styles.imgSmall} />
             <div className={styles.cardText}>
               <h2>Explora nuestra tienda online</h2>
-              <p>Compra desde casa con confianza y env\u00edo en 24h.</p>
+              <p>Compra desde casa con confianza y envío en 24h.</p>
             </div>
           </div>
         </section>
       </main>
 
       <footer className={styles.footer}>
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
+        <a href="https://nextjs.org/learn" target="_blank" rel="noopener noreferrer">
+          <Image aria-hidden src="/file.svg" alt="File icon" width={16} height={16} />
           Learn
         </a>
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
+        <a href="https://vercel.com/templates" target="_blank" rel="noopener noreferrer">
+          <Image aria-hidden src="/window.svg" alt="Window icon" width={16} height={16} />
           Examples
         </a>
-        <a
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org \u2192
+        <a href="https://nextjs.org" target="_blank" rel="noopener noreferrer">
+          <Image aria-hidden src="/globe.svg" alt="Globe icon" width={16} height={16} />
+          Go to nextjs.org →
         </a>
       </footer>
     </div>

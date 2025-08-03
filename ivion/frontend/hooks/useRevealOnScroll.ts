@@ -10,14 +10,18 @@ export default function useRevealOnScroll<T extends HTMLElement>(
     if (!node) return;
 
     const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true);
-          observer.disconnect(); // solo una vez
-        }
-      },
-      { threshold: 0.1 }
-    );
+  ([entry]) => {
+    if (entry.isIntersecting) {
+      setIsVisible(true);
+      observer.disconnect();
+    }
+  },
+  {
+    threshold: 0,
+    rootMargin: "0px 0px -20% 0px" // disparar antes de que el elemento entre completamente
+  }
+);
+
 
     observer.observe(node);
     return () => observer.disconnect();
