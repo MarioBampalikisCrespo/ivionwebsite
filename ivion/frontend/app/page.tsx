@@ -3,12 +3,23 @@
 import { useState } from "react";
 import Image from "next/image";
 import styles from "./page.module.css";
+import { useRouter } from "next/navigation";
+import { CiUser } from "react-icons/ci";
 
 export default function Home() {
   const [activePanel, setActivePanel] = useState<"productos" | "servicios" | null>(null);
+  const  router = useRouter();
 
-  const togglePanel = (panel: "productos" | "servicios") => {
+  const togglePanelProductos = (panel: "productos") => {
     setActivePanel((prev) => (prev === panel ? null : panel));
+  };
+
+  const togglePanelServicios = (panel: "servicios") => {
+    setActivePanel((prev) => (prev === panel ? null : panel));
+  };
+
+  const goToBuy = () => {
+    router.push('/buy/products')
   };
 
   return (
@@ -31,11 +42,16 @@ export default function Home() {
         />
         <ul>
           <li><a href="#">Inicio</a></li>
-          <li><button className={styles.navButton} onClick={() => togglePanel("productos")}>Productos</button></li>
-          <li><button className={styles.navButton} onClick={() => togglePanel("servicios")}>Servicios</button></li>
+          <li><button className={styles.navButton} onClick={() => togglePanelProductos("productos")}>Productos</button></li>
+          <li><button className={styles.navButton} onClick={() => togglePanelServicios("servicios")}>Servicios</button></li>
           <li><a href="#soporte">Soporte</a></li>
           <li><a href="#contacto">Contacto</a></li>
         </ul>
+        <div className="login">
+          <button className={styles.loginStyle}>
+              <CiUser className={styles.iconStyle}></CiUser>
+          </button>
+        </div>
       </div>
 
       {activePanel && (
@@ -43,7 +59,7 @@ export default function Home() {
           <button className={styles.closeButton} onClick={() => setActivePanel(null)}>×</button>
           {activePanel === "productos" && (
             <div className={styles.panelContent}>
-              <a href="#iphone">iPhone</a>
+              <a href="#iphone" onClick={goToBuy}>iPhone</a>
               <a href="#ipad">iPad</a>
               <a href="#macbook">MacBook</a>
               <a href="#accesories">Accesorios</a>
@@ -117,7 +133,7 @@ export default function Home() {
           <div className={styles.card2}>
             <div className={styles.cardText}>
               <h2>Servicio técnico autorizado</h2>
-              <p>Reparamos tu dispositivo Apple con piezas originales y garantía oficial.</p>
+              <p>En iVion trabajamos conjunto a Apple para que tu dispositivo quede como recién salido de la caja.</p>
             </div>
             <Image src="/repair_service.jpg" alt="Servicio técnico" width={700} height={500} />
           </div>
