@@ -17,11 +17,16 @@ export default function Home() {
   const togglePanelServicios = (panel: "servicios") => {
     setActivePanel((prev) => (prev === panel ? null : panel));
   };
+    
 
   const goToBuy = () => {
     router.push('/buy/products')
   };
 
+  const goToLogin = () => {
+    router.push('/auth/login');
+  }
+  
   return (
     <div className={styles.page}>
       <div className={styles.nav}>
@@ -48,7 +53,7 @@ export default function Home() {
           <li><a href="#contacto">Contacto</a></li>
         </ul>
         <div className="login">
-          <button className={styles.loginStyle}>
+          <button className={styles.loginStyle} onClick={goToLogin}>
               <CiUser className={styles.iconStyle}></CiUser>
           </button>
         </div>
