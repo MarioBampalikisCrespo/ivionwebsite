@@ -1,17 +1,12 @@
 /* ==== VARIABLES Y BASE ==== */
 
-.page {
-  --gray-rgb: 255, 255, 255;
-  --gray-alpha-200: rgba(var(--gray-rgb), 0.08);
-  --gray-alpha-100: rgba(var(--gray-rgb), 0.05);
+.homePage {
   --button-primary-hover: #e0e0e0;
   --button-secondary-hover: #f5f5f5;
 
-  display: grid;
-  grid-template-rows: auto 1fr auto;
-  align-items: start;
-  justify-items: center;
-
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   min-height: 100vh;
   width: 100%;
   padding: 24px;
@@ -24,7 +19,6 @@
   display: flex;
   flex-direction: column;
   gap: 32px;
-  grid-row-start: 2;
   width: 100%;
   max-width: 1440px;
   padding: 0 16px;
@@ -86,13 +80,16 @@ a.secondary {
 }
 
 .footer {
-  grid-row-start: 3;
   display: flex;
   flex-wrap: wrap;
   gap: 24px;
   align-items: center;
   justify-content: center;
   width: 100%;
+  padding: 24px 0;
+  border-top: 1px solid var(--gray-alpha-200);
+  color: #888;
+  font-size: 14px;
 }
 
 .footer a {

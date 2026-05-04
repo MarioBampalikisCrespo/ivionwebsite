@@ -1,0 +1,276 @@
+.page {
+  min-height: 100vh;
+  padding: 40px 24px;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.title {
+  font-size: 32px;
+  font-weight: 600;
+  margin-bottom: 32px;
+}
+
+.empty {
+  text-align: center;
+  padding: 80px 24px;
+  color: #888;
+}
+
+.empty p {
+  font-size: 16px;
+  margin-bottom: 16px;
+}
+
+.shopLink {
+  display: inline-block;
+  padding: 12px 24px;
+  background: var(--foreground);
+  color: var(--background);
+  border-radius: 10px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: opacity 0.2s;
+}
+
+.shopLink:hover {
+  opacity: 0.85;
+}
+
+.items {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 32px;
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px;
+  border: 1px solid var(--gray-alpha-200);
+  border-radius: 12px;
+  background: var(--background);
+}
+
+.imageBox {
+  width: 80px;
+  height: 80px;
+  border-radius: 10px;
+  background: var(--gray-alpha-100);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.imgPlaceholder {
+  font-size: 32px;
+}
+
+.itemInfo {
+  flex: 1;
+}
+
+.itemName {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.itemPrice {
+  font-size: 14px;
+  color: #888;
+}
+
+.itemSubtotal {
+  font-size: 16px;
+  font-weight: 700;
+  margin-left: auto;
+}
+
+.removeBtn {
+  background: none;
+  border: none;
+  color: #e53e3e;
+  font-size: 20px;
+  cursor: pointer;
+  padding: 4px;
+  flex-shrink: 0;
+  transition: opacity 0.2s;
+}
+
+.removeBtn:hover {
+  opacity: 0.7;
+}
+
+.summary {
+  border: 1px solid var(--gray-alpha-200);
+  border-radius: 16px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.summaryRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 15px;
+}
+
+.summaryTotal {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 20px;
+  font-weight: 700;
+  padding-top: 16px;
+  border-top: 1px solid var(--gray-alpha-200);
+}
+
+.checkoutBtn {
+  padding: 16px;
+  background: var(--foreground);
+  color: var(--background);
+  border: none;
+  border-radius: 12px;
+  font-size: 17px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  transition: opacity 0.2s;
+}
+
+.checkoutBtn:hover {
+  opacity: 0.85;
+}
+
+.checkoutBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Checkout modal */
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  padding: 24px;
+}
+
+.modal {
+  background: var(--background);
+  border-radius: 20px;
+  padding: 40px;
+  width: 100%;
+  max-width: 480px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.modalTitle {
+  font-size: 22px;
+  font-weight: 600;
+}
+
+.modalField {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.modalLabel {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.modalInput {
+  padding: 12px 14px;
+  border: 1px solid var(--gray-alpha-200);
+  border-radius: 10px;
+  font-size: 15px;
+  background-color: var(--background);
+  color: inherit;
+  outline: none;
+  font-family: inherit;
+  transition: border-color 0.2s;
+}
+
+.modalInput:focus {
+  border-color: #0070f3;
+}
+
+.modalActions {
+  display: flex;
+  gap: 12px;
+}
+
+.cancelBtn {
+  flex: 1;
+  padding: 13px;
+  background: var(--gray-alpha-100);
+  color: inherit;
+  border: 1px solid var(--gray-alpha-200);
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.2s;
+}
+
+.cancelBtn:hover {
+  background: var(--gray-alpha-200);
+}
+
+.confirmBtn {
+  flex: 1;
+  padding: 13px;
+  background: var(--foreground);
+  color: var(--background);
+  border: none;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  transition: opacity 0.2s;
+}
+
+.confirmBtn:hover {
+  opacity: 0.85;
+}
+
+.confirmBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.successMsg {
+  color: #38a169;
+  font-size: 14px;
+  font-weight: 500;
+  text-align: center;
+}
+
+.errorMsg {
+  color: #e53e3e;
+  font-size: 14px;
+  text-align: center;
+}
+
+.loading {
+  text-align: center;
+  padding: 80px 24px;
+  color: #888;
+}

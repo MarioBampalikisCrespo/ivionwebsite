@@ -1,0 +1,175 @@
+.page {
+  min-height: 100vh;
+  padding: 40px 24px;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 40px;
+  flex-wrap: wrap;
+}
+
+.avatar {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: var(--foreground);
+  color: var(--background);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.headerInfo h1 {
+  font-size: 26px;
+  font-weight: 600;
+}
+
+.headerInfo p {
+  color: #888;
+  font-size: 15px;
+  margin-top: 2px;
+}
+
+.section {
+  margin-bottom: 40px;
+}
+
+.sectionTitle {
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 16px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--gray-alpha-200);
+}
+
+.infoGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 16px;
+}
+
+.infoCard {
+  padding: 16px;
+  border: 1px solid var(--gray-alpha-200);
+  border-radius: 12px;
+  background: var(--gray-alpha-100);
+}
+
+.infoLabel {
+  font-size: 12px;
+  color: #888;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 4px;
+}
+
+.infoValue {
+  font-size: 15px;
+  font-weight: 500;
+}
+
+.orders {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.orderCard {
+  border: 1px solid var(--gray-alpha-200);
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.orderHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 20px;
+  background: var(--gray-alpha-100);
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.orderId {
+  font-weight: 600;
+  font-size: 15px;
+}
+
+.orderDate {
+  font-size: 13px;
+  color: #888;
+}
+
+.orderState {
+  font-size: 13px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 20px;
+  background: #e6f4ea;
+  color: #38a169;
+}
+
+.orderState.pending {
+  background: #fef3cd;
+  color: #d69e2e;
+}
+
+.orderItems {
+  padding: 16px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.orderItem {
+  display: flex;
+  justify-content: space-between;
+  font-size: 14px;
+}
+
+.orderItemName {
+  color: #555;
+}
+
+.orderItemPrice {
+  font-weight: 500;
+}
+
+.orderFooter {
+  display: flex;
+  justify-content: space-between;
+  padding: 12px 20px;
+  border-top: 1px solid var(--gray-alpha-200);
+  font-size: 15px;
+}
+
+.orderTotal {
+  font-weight: 700;
+}
+
+.orderAddress {
+  font-size: 13px;
+  color: #888;
+}
+
+.noOrders {
+  text-align: center;
+  padding: 40px 24px;
+  color: #888;
+  font-size: 15px;
+}
+
+.loading {
+  text-align: center;
+  padding: 80px 24px;
+  color: #888;
+}

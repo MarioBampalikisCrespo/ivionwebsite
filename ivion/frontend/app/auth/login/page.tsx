@@ -1,93 +1,80 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import Image from "next/image";
-import styles from "../../page.module.css";
-import { useRouter } from "next/navigation";
-import { CiUser } from "react-icons/ci";
-import Home from "../../page";
+import { useState } from 'react';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { api } from '../../../lib/api';
+import { AuthResponse } from '../../../lib/types';
+import { useAuth } from '../../../context/AuthContext';
+import styles from '../auth.module.css';
 
-export default function Login () {
-  const [activePanel, setActivePanel] = useState<"productos" | "servicios" | null>(null);
-  const  router = useRouter();
+export default function LoginPage() {
+  const router = useRouter();
+  const { login } = useAuth();
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
 
-  const togglePanelProductos = (panel: "productos") => {
-    setActivePanel((prev) => (prev === panel ? null : panel));
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError('');
+    setLoading(true);
+    try {
+      const res = await api.post<AuthResponse>('/api/auth/login', { email, password });
+      login(res.token, res.user);
+      router.push('/');
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Error al iniciar sesión');
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const togglePanelServicios = (panel: "servicios") => {
-    setActivePanel((prev) => (prev === panel ? null : panel));
-  };
-    
-
-  const goToBuy = () => {
-    router.push('/buy/products')
-  };
-
-  const goToLogin = () => {
-    router.push('/auth/login');
-  }
-
-  const goHome = () => {
-    router.push('/#')
-  }
- return (
+  return (
     <div className={styles.page}>
-        <div className={styles.nav}>
-            <Image
-            className={styles.imagen}
-            src="/iVion_logo_light.svg"
-            alt="iVion logo"
-            width={260}
-            height={80}
-            priority
-            />
-            <Image
-            className={styles.partner}
-            src="/partnerbadge.png"
-            alt="partner badge"
-            width={100}
-            height={47}
-            />
-            <ul>
-            <li><a href="#" onClick={goHome}>Inicio</a></li>
-            <li><button className={styles.navButton} onClick={() => togglePanelProductos("productos")}>Productos</button></li>
-            <li><button className={styles.navButton} onClick={() => togglePanelServicios("servicios")}>Servicios</button></li>
-            <li><a href="#soporte">Soporte</a></li>
-            <li><a href="#contacto">Contacto</a></li>
-            </ul>
-            <div className="login">
-            <button className={styles.loginStyle} onClick={goToLogin}>
-                <CiUser className={styles.iconStyle}></CiUser>
-            </button>
-            </div>
+      <div className={styles.card}>
+        <h1 className={styles.title}>Iniciar Sesión</h1>
+        <p className={styles.subtitle}>Accede a tu cuenta iVion</p>
 
-        {activePanel && (
-            <div className={styles.dropdownPanel}>
-            <button className={styles.closeButton} onClick={() => setActivePanel(null)}>×</button>
-            {activePanel === "productos" && (
-                <div className={styles.panelContent}>
-                <a href="#iphone" onClick={goToBuy}>iPhone</a>
-                <a href="#ipad">iPad</a>
-                <a href="#macbook">MacBook</a>
-                <a href="#accesories">Accesorios</a>
-                </div>
-            )}
-            {activePanel === "servicios" && (
-                <div className={styles.panelContent}>
-                <p>Reparaciones</p>
-                <p>Mantenimiento</p>
-                <p>Diagnóstico</p>
-                </div>
-            )}
-            </div>
-        )
-        }
+        <form className={styles.form} onSubmit={handleSubmit}>
+          <div className={styles.field}>
+            <label className={styles.label} htmlFor="email">Email</label>
+            <input
+              id="email"
+              type="email"
+              className={styles.input}
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="tu@email.com"
+              required
+            />
+          </div>
+          <div className={styles.field}>
+            <label className={styles.label} htmlFor="password">Contraseña</label>
+            <input
+              id="password"
+              type="password"
+              className={styles.input}
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="••••••••"
+              required
+            />
+          </div>
 
-        <div className={styles.loginContainer}>
-            <h1 className={styles.titles}>Iniciar Sesión</h1>    
-        </div>
-        </div>
+          {error && <p className={styles.error}>{error}</p>}
+
+          <button type="submit" className={styles.submit} disabled={loading}>
+            {loading ? 'Entrando...' : 'Iniciar Sesión'}
+          </button>
+        </form>
+
+        <p className={styles.footer}>
+          ¿No tienes cuenta?{' '}
+          <Link href="/auth/register">Regístrate aquí</Link>
+        </p>
+      </div>
     </div>
- )
+  );
 }
