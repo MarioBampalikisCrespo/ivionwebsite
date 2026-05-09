@@ -1,0 +1,422 @@
+.page {
+  min-height: 100vh;
+  background-color: var(--background);
+  color: var(--foreground);
+}
+
+/* Animations */
+.pageEnter {
+  opacity: 0;
+  transform: translateY(30px);
+  animation: fadeInUp 0.6s ease-out forwards;
+}
+
+.reveal {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+}
+
+.revealVisible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@keyframes fadeInUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Hero */
+.hero {
+  padding: 80px 24px;
+  text-align: center;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.badge {
+  display: inline-block;
+  background: #e8f5e9;
+  color: #38a169;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 6px 14px;
+  border-radius: 20px;
+  margin-bottom: 20px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.heroTitle {
+  font-size: 48px;
+  font-weight: 700;
+  line-height: 1.15;
+  margin-bottom: 20px;
+}
+
+.heroTitle span {
+  color: #38a169;
+}
+
+.heroSubtitle {
+  font-size: 18px;
+  color: #666;
+  line-height: 1.7;
+  max-width: 600px;
+  margin: 0 auto 36px;
+}
+
+.heroCta {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 32px;
+  background: var(--foreground);
+  color: var(--background);
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: opacity 0.2s;
+}
+
+.heroCta:hover {
+  opacity: 0.85;
+}
+
+/* Plans */
+.plansSection {
+  padding: 64px 24px;
+  background: var(--gray-alpha-100);
+}
+
+.sectionInner {
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.sectionTitle {
+  font-size: 28px;
+  font-weight: 600;
+  text-align: center;
+  margin-bottom: 12px;
+}
+
+.sectionSubtitle {
+  text-align: center;
+  color: #888;
+  font-size: 15px;
+  margin-bottom: 40px;
+}
+
+.plansGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 24px;
+}
+
+.planCard {
+  background: var(--background);
+  border: 1px solid var(--gray-alpha-200);
+  border-radius: 20px;
+  padding: 32px 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  position: relative;
+}
+
+.planCard.featured {
+  border-color: #38a169;
+  box-shadow: 0 0 0 1px #38a169;
+}
+
+.featuredBadge {
+  position: absolute;
+  top: -12px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #38a169;
+  color: white;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 4px 14px;
+  border-radius: 20px;
+  white-space: nowrap;
+}
+
+.planIcon {
+  font-size: 36px;
+}
+
+.planName {
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.planPrice {
+  font-size: 28px;
+  font-weight: 700;
+  color: #38a169;
+}
+
+.planPrice span {
+  font-size: 14px;
+  font-weight: 400;
+  color: #888;
+}
+
+.planFeatures {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  flex: 1;
+}
+
+.planFeatures li {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: 14px;
+  color: #555;
+}
+
+.planFeatures li::before {
+  content: '✓';
+  color: #38a169;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.planCta {
+  display: block;
+  text-align: center;
+  padding: 12px;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: opacity 0.2s;
+  background: var(--foreground);
+  color: var(--background);
+}
+
+.planCta:hover {
+  opacity: 0.85;
+}
+
+/* What's included */
+.includedSection {
+  padding: 64px 24px;
+}
+
+.includedGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 20px;
+}
+
+.includedCard {
+  border: 1px solid var(--gray-alpha-200);
+  border-radius: 16px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.includedIcon {
+  font-size: 28px;
+}
+
+.includedName {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.includedDesc {
+  font-size: 14px;
+  color: #666;
+  line-height: 1.6;
+}
+
+/* Frequency */
+.frequencySection {
+  padding: 64px 24px;
+  background: var(--gray-alpha-100);
+}
+
+.frequencyGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 20px;
+}
+
+.frequencyCard {
+  background: var(--background);
+  border: 1px solid var(--gray-alpha-200);
+  border-radius: 16px;
+  padding: 24px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.frequencyIcon {
+  font-size: 32px;
+}
+
+.frequencyDevice {
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.frequencyPeriod {
+  font-size: 13px;
+  color: #38a169;
+  font-weight: 600;
+}
+
+.frequencyDesc {
+  font-size: 13px;
+  color: #888;
+  line-height: 1.5;
+}
+
+/* Contact */
+.contactSection {
+  padding: 80px 24px;
+  max-width: 640px;
+  margin: 0 auto;
+}
+
+.contactTitle {
+  font-size: 28px;
+  font-weight: 600;
+  text-align: center;
+  margin-bottom: 8px;
+}
+
+.contactSubtitle {
+  text-align: center;
+  color: #888;
+  font-size: 15px;
+  margin-bottom: 40px;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.label {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.input,
+.select,
+.textarea {
+  padding: 12px 14px;
+  border: 1px solid var(--gray-alpha-200);
+  border-radius: 10px;
+  font-size: 15px;
+  background-color: var(--background);
+  color: inherit;
+  outline: none;
+  font-family: inherit;
+  transition: border-color 0.2s;
+}
+
+.input:focus,
+.select:focus,
+.textarea:focus {
+  border-color: #38a169;
+}
+
+.textarea {
+  resize: vertical;
+  min-height: 120px;
+}
+
+.submit {
+  padding: 14px;
+  background: var(--foreground);
+  color: var(--background);
+  border: none;
+  border-radius: 10px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  transition: opacity 0.2s;
+  margin-top: 8px;
+}
+
+.submit:hover {
+  opacity: 0.85;
+}
+
+.submit:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.successMsg {
+  text-align: center;
+  padding: 20px;
+  background: #e8f5e9;
+  color: #38a169;
+  border-radius: 10px;
+  font-weight: 500;
+}
+
+.contactInfo {
+  display: flex;
+  justify-content: center;
+  gap: 32px;
+  margin-top: 32px;
+  flex-wrap: wrap;
+}
+
+.contactItem {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: #666;
+}
+
+.contactItem a {
+  color: #38a169;
+  font-weight: 500;
+}
+
+@media (max-width: 768px) {
+  .heroTitle {
+    font-size: 32px;
+  }
+
+  .row {
+    grid-template-columns: 1fr;
+  }
+}

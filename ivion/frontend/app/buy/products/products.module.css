@@ -20,6 +20,158 @@
   font-size: 15px;
 }
 
+.searchBar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--gray-alpha-100);
+  border: 1px solid var(--gray-alpha-200);
+  border-radius: 12px;
+  padding: 10px 16px;
+  margin-bottom: 20px;
+  transition: border-color 0.2s;
+}
+
+.searchBar:focus-within {
+  border-color: #0070f3;
+}
+
+.searchIcon {
+  width: 22px;
+  height: 22px;
+  flex-shrink: 0;
+  color: #aaa;
+}
+
+.searchInput {
+  flex: 1;
+  border: none;
+  background: none;
+  font-size: 15px;
+  color: inherit;
+  outline: none;
+  font-family: inherit;
+}
+
+.searchInput::placeholder {
+  color: #aaa;
+}
+
+.clearBtn {
+  background: none;
+  border: none;
+  font-size: 20px;
+  color: #aaa;
+  cursor: pointer;
+  padding: 0 4px;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.clearBtn:hover {
+  color: var(--foreground);
+}
+
+.filterToggle {
+  background: var(--gray-alpha-100);
+  border: 1px solid var(--gray-alpha-200);
+  border-radius: 8px;
+  padding: 6px 12px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  color: inherit;
+  font-family: inherit;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+  transition: background 0.2s, border-color 0.2s;
+}
+
+.filterToggle:hover,
+.filterToggleActive {
+  background: var(--gray-alpha-200);
+  border-color: #0070f3;
+  color: #0070f3;
+}
+
+.filterDot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #0070f3;
+}
+
+.filterPanel {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  align-items: flex-end;
+  padding: 20px;
+  background: var(--gray-alpha-100);
+  border: 1px solid var(--gray-alpha-200);
+  border-radius: 12px;
+  margin-bottom: 20px;
+}
+
+.filterGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 140px;
+}
+
+.filterLabel {
+  font-size: 12px;
+  font-weight: 600;
+  color: #888;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.filterInput,
+.filterSelect {
+  padding: 9px 12px;
+  border: 1px solid var(--gray-alpha-200);
+  border-radius: 8px;
+  font-size: 14px;
+  background: var(--background);
+  color: inherit;
+  font-family: inherit;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.filterInput:focus,
+.filterSelect:focus {
+  border-color: #0070f3;
+}
+
+.clearFiltersBtn {
+  padding: 9px 16px;
+  border: 1px solid #e53e3e;
+  border-radius: 8px;
+  background: none;
+  color: #e53e3e;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.2s;
+  align-self: flex-end;
+}
+
+.clearFiltersBtn:hover {
+  background: #fff5f5;
+}
+
+.resultsCount {
+  font-size: 13px;
+  color: #888;
+  margin-bottom: 4px;
+}
+
 .filters {
   display: flex;
   gap: 10px;
@@ -76,7 +228,7 @@
 
 .imageWrapper {
   width: 100%;
-  aspect-ratio: 4 / 3;
+  aspect-ratio: 1 / 1;
   background: var(--gray-alpha-100);
   display: flex;
   align-items: center;

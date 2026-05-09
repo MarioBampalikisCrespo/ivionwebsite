@@ -1,73 +1,132 @@
 'use client';
 
+import { useRef } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import useRevealOnScroll from '../hooks/useRevealOnScroll';
 import styles from './page.module.css';
 
-export default function Home() {
+const CATEGORIES = [
+  { name: 'iPhone',      icon: '📱', href: '/buy/products?category=1' },
+  { name: 'iPad',        icon: '🖥️', href: '/buy/products?category=2' },
+  { name: 'MacBook',     icon: '💻', href: '/buy/products?category=3' },
+  { name: 'Accesorios',  icon: '🎧', href: '/buy/products?category=4' },
+];
+
+const FEATURES = [
+  {
+    image: '/iphone_offer.jpg',
+    title: '¿Teléfono viejo?',
+    text: 'En iVion tu nuevo iPhone te espera con precios que no creerás.',
+    cta: 'Ver iPhones',
+    href: '/buy/products?category=1',
+    reverse: false,
+  },
+  {
+    image: '/repair_service.jpg',
+    title: 'Servicio técnico autorizado',
+    text: 'Trabajamos junto a Apple para que tu dispositivo quede como recién salido de la caja.',
+    cta: 'Más información',
+    href: '/services/repair',
+    reverse: true,
+  },
+  {
+    image: '/online_store.jpg',
+    title: 'Explora nuestra tienda online',
+    text: 'Compra desde casa con confianza y envío en 24h.',
+    cta: 'Ir a la tienda',
+    href: '/buy/products',
+    reverse: false,
+  },
+];
+
+function FeatureCard({ image, title, text, cta, href, reverse }: typeof FEATURES[0]) {
+  const ref = useRef<HTMLDivElement>(null);
+  const visible = useRevealOnScroll(ref as React.RefObject<HTMLElement>);
+
   return (
-    <div className={styles.homePage}>
-      <main className={`${styles.main} ${styles.pageEnter}`}>
-        <div>
-          <Image
-            src="/mainbanner.jpg"
-            alt="iVion banner"
-            width={1480}
-            height={500}
-          />
-        </div>
-        <h1 className={styles.mainTitle}>iVion. Excelencia Apple, sin complicaciones</h1>
-        <p>Calidad Apple, a precios razonables</p>
-        <p>¿Tienes problemas con tu dispositivo? ¡Tráenoslo! Lo revisaremos encantados</p>
+    <div
+      ref={ref}
+      className={`${styles.featureCard} ${reverse ? styles.featureCardReverse : ''} ${styles.reveal} ${visible ? styles.revealVisible : ''}`}
+    >
+      <div className={styles.featureImageWrapper}>
+        <Image src={image} alt={title} fill style={{ objectFit: 'cover' }} />
+      </div>
+      <div className={styles.featureText}>
+        <h2 className={styles.featureTitle}>{title}</h2>
+        <p className={styles.featureDesc}>{text}</p>
+        <Link href={href} className={styles.featureCta}>{cta}</Link>
+      </div>
+    </div>
+  );
+}
 
-        <div className={styles.ctas}>
-          <Link className={styles.primary} href="/buy/products">
-            <Image
-              className={styles.apple}
-              src="/apple-logo.svg"
-              alt="Apple logo"
-              width={20}
-              height={20}
-            />
-            Explora nuestro catálogo
-          </Link>
-        </div>
+export default function Home() {
+  const categoriesRef = useRef<HTMLElement>(null);
+  const featuresRef = useRef<HTMLElement>(null);
+  const categoriesVisible = useRevealOnScroll(categoriesRef);
+  const featuresVisible = useRevealOnScroll(featuresRef);
 
-        <div className={styles.divider}>
-          <p className={styles.info}>Más información</p>
-          <div className={styles.arrow}>
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="24" height="24" fill="currentColor">
-              <path d="M903.232 256l56.768 50.432L512 768 64 306.432 120.768 256 512 659.072z" />
-            </svg>
+  return (
+    <div className={styles.page}>
+      {/* Hero */}
+      <section className={styles.hero}>
+        <Image
+          src="/mainbanner.jpg"
+          alt="iVion banner"
+          fill
+          style={{ objectFit: 'cover', objectPosition: 'center' }}
+          priority
+        />
+        <div className={styles.heroOverlay} />
+        <div className={`${styles.heroContent} ${styles.pageEnter}`}>
+          <span className={styles.heroBadge}>Apple Premium Reseller · Madrid, Gran Vía</span>
+          <h1 className={styles.heroTitle}>Excelencia Apple,<br />sin complicaciones</h1>
+          <p className={styles.heroSubtitle}>La mejor selección de productos Apple con el servicio que mereces.</p>
+          <div className={styles.heroCtas}>
+            <Link href="/buy/products" className={styles.ctaPrimary}>
+              <Image src="/apple-logo.svg" alt="" width={18} height={18} className={styles.appleIcon} />
+              Explorar catálogo
+            </Link>
+            <Link href="/services/repair" className={styles.ctaSecondary}>
+              Servicio técnico
+            </Link>
           </div>
         </div>
+      </section>
 
-        <section className={styles.featuresSection}>
-          <div className={styles.card1}>
-            <Image src="/iphone_offer.jpg" alt="Oferta iPhone" width={700} height={500} />
-            <div className={styles.cardText}>
-              <h2>¿Teléfono viejo?</h2>
-              <p>En iVion tu nuevo iPhone te espera con precios que no creerás.</p>
-            </div>
+      {/* Categories */}
+      <section
+        ref={categoriesRef}
+        className={`${styles.categoriesSection} ${styles.reveal} ${categoriesVisible ? styles.revealVisible : ''}`}
+      >
+        <div className={styles.sectionInner}>
+          <h2 className={styles.sectionTitle}>¿Qué estás buscando?</h2>
+          <div className={styles.categoriesGrid}>
+            {CATEGORIES.map((cat) => (
+              <Link key={cat.name} href={cat.href} className={styles.categoryCard}>
+                <span className={styles.categoryIcon}>{cat.icon}</span>
+                <span className={styles.categoryName}>{cat.name}</span>
+              </Link>
+            ))}
           </div>
+        </div>
+      </section>
 
-          <div className={styles.card2}>
-            <div className={styles.cardText}>
-              <h2>Servicio técnico autorizado</h2>
-              <p>En iVion trabajamos conjunto a Apple para que tu dispositivo quede como recién salido de la caja.</p>
-            </div>
-            <Image src="/repair_service.jpg" alt="Servicio técnico" width={700} height={500} />
+      {/* Features */}
+      <section
+        ref={featuresRef}
+        className={`${styles.featuresSection} ${styles.reveal} ${featuresVisible ? styles.revealVisible : ''}`}
+      >
+        <div className={styles.sectionInner}>
+          <h2 className={styles.sectionTitle}>Por qué elegir iVion</h2>
+          <div className={styles.featuresList}>
+            {FEATURES.map((f) => (
+              <FeatureCard key={f.title} {...f} />
+            ))}
           </div>
-
-          <div className={styles.card3}>
-            <Image src="/online_store.jpg" alt="Tienda online" width={500} height={300} className={styles.imgSmall} />
-            <div className={styles.cardText}>
-              <h2>Explora nuestra tienda online</h2>
-              <p>Compra desde casa con confianza y envío en 24h.</p>
-            </div>
-          </div>
-        </section>
-      </main>
+        </div>
+      </section>
 
       <footer className={styles.footer}>
         <p>© 2026 iVion. Todos los derechos reservados.</p>

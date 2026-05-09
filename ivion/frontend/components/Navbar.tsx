@@ -33,23 +33,27 @@ export default function Navbar() {
   return (
     <>
       <nav className={styles.nav}>
-        <Link href="/">
-          <Image
-            className={styles.imagen}
-            src="/iVion_logo_light.svg"
-            alt="iVion logo"
-            width={260}
-            height={80}
-            priority
-          />
-        </Link>
-        <Image
-          className={styles.partner}
-          src="/partnerbadge.png"
-          alt="partner badge"
-          width={100}
-          height={47}
-        />
+        <div className={styles.logoGroup}>
+          <Link href="/">
+            <Image
+              className={styles.imagen}
+              src="/iVion_logo_light.svg"
+              alt="iVion logo"
+              width={120}
+              height={62}
+              priority
+            />
+          </Link>
+          <Link href="/about" onClick={() => setActivePanel(null)}>
+            <Image
+              className={styles.partner}
+              src="/partnerbadge.png"
+              alt="Apple Premium Reseller"
+              width={100}
+              height={47}
+            />
+          </Link>
+        </div>
         <ul>
           <li><Link href="/">Inicio</Link></li>
           <li>
@@ -62,8 +66,8 @@ export default function Navbar() {
               Servicios
             </button>
           </li>
-          <li><a href="#soporte">Soporte</a></li>
-          <li><a href="#contacto">Contacto</a></li>
+          <li><Link href="/support" onClick={() => setActivePanel(null)}>Soporte</Link></li>
+          <li><Link href="/contact" onClick={() => setActivePanel(null)}>Contacto</Link></li>
         </ul>
 
         <div className={styles.navIcons}>
@@ -74,9 +78,10 @@ export default function Navbar() {
           )}
           {isAuthenticated ? (
             <div className={styles.userMenu}>
-              <button className={styles.userButton} onClick={handleUserClick}>
-                <CiUser className={styles.iconStyle} />
-                {user?.username}
+              <button className={styles.avatarBtn} onClick={handleUserClick} title={user?.username}>
+                <span className={styles.avatar}>
+                  {(user!.username[0] + (user!.userSurnames?.[0] ?? '')).toUpperCase()}
+                </span>
               </button>
               <button className={styles.navButton} onClick={handleLogout}>
                 Salir
@@ -103,9 +108,9 @@ export default function Navbar() {
           )}
           {activePanel === 'servicios' && (
             <div className={styles.panelContent}>
-              <p>Reparaciones</p>
-              <p>Mantenimiento</p>
-              <p>Diagnóstico</p>
+              <Link href="/services/repair" onClick={() => setActivePanel(null)}>Reparaciones</Link>
+              <Link href="/services/maintenance" onClick={() => setActivePanel(null)}>Mantenimiento</Link>
+              <Link href="/services/diagnostic" onClick={() => setActivePanel(null)}>Diagnóstico</Link>
             </div>
           )}
         </div>

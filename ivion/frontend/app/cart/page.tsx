@@ -7,6 +7,7 @@ import { useRouter } from 'next/navigation';
 import { api } from '../../lib/api';
 import { CartDTO, OrderDTO } from '../../lib/types';
 import { useAuth } from '../../context/AuthContext';
+import { productImageSrc } from '../../lib/images';
 import styles from './cart.module.css';
 
 export default function CartPage() {
@@ -95,9 +96,9 @@ export default function CartPage() {
             {cart.items.map((item) => (
               <div key={item.product.id} className={styles.item}>
                 <div className={styles.imageBox}>
-                  {item.product.productImage ? (
+                  {productImageSrc(item.product.productImage) ? (
                     <Image
-                      src={`/products/${item.product.productImage}`}
+                      src={productImageSrc(item.product.productImage)!}
                       alt={item.product.productName}
                       fill
                       style={{ objectFit: 'contain', padding: '8px' }}

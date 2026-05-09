@@ -6,6 +6,7 @@ import { useRouter, useParams } from 'next/navigation';
 import { api } from '../../../../lib/api';
 import { ProductDTO, CartDTO } from '../../../../lib/types';
 import { useAuth } from '../../../../context/AuthContext';
+import { productImageSrc } from '../../../../lib/images';
 import styles from './product.module.css';
 
 export default function ProductDetailPage() {
@@ -58,9 +59,9 @@ export default function ProductDetailPage() {
       <div className={styles.content}>
         <div className={styles.imageSection}>
           <div className={styles.imageWrapper}>
-            {product.productImage ? (
+            {productImageSrc(product.productImage) ? (
               <Image
-                src={`/products/${product.productImage}`}
+                src={productImageSrc(product.productImage)!}
                 alt={product.productName}
                 fill
                 style={{ objectFit: 'contain', padding: '16px' }}
