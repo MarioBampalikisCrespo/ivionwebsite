@@ -3,14 +3,18 @@
 import { useRef } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import useRevealOnScroll from '../hooks/useRevealOnScroll';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { useGSAP } from '@gsap/react';
 import styles from './page.module.css';
 
+gsap.registerPlugin(ScrollTrigger, useGSAP);
+
 const CATEGORIES = [
-  { name: 'iPhone',      icon: '📱', href: '/buy/products?category=1' },
-  { name: 'iPad',        icon: '🖥️', href: '/buy/products?category=2' },
-  { name: 'MacBook',     icon: '💻', href: '/buy/products?category=3' },
-  { name: 'Accesorios',  icon: '🎧', href: '/buy/products?category=4' },
+  { name: 'iPhone',     href: '/buy/products?category=1' },
+  { name: 'iPad',       href: '/buy/products?category=2' },
+  { name: 'MacBook',    href: '/buy/products?category=3' },
+  { name: 'Accesorios', href: '/buy/products?category=4' },
 ];
 
 const FEATURES = [
@@ -41,18 +45,36 @@ const FEATURES = [
 ];
 
 function FeatureCard({ image, title, text, cta, href, reverse }: typeof FEATURES[0]) {
-  const ref = useRef<HTMLDivElement>(null);
-  const visible = useRevealOnScroll(ref as React.RefObject<HTMLElement>);
+  const cardRef = useRef<HTMLDivElement>(null);
+  const imgRef = useRef<HTMLDivElement>(null);
+  const textRef = useRef<HTMLDivElement>(null);
+
+  useGSAP(() => {
+    gsap.matchMedia().add('(prefers-reduced-motion: no-preference)', () => {
+      gsap.from(imgRef.current, {
+        x: reverse ? 60 : -60,
+        opacity: 0,
+        duration: 0.75,
+        ease: 'power2.out',
+        scrollTrigger: { trigger: cardRef.current, start: 'top 82%' },
+      });
+      gsap.from(textRef.current, {
+        x: reverse ? -60 : 60,
+        opacity: 0,
+        duration: 0.75,
+        ease: 'power2.out',
+        delay: 0.12,
+        scrollTrigger: { trigger: cardRef.current, start: 'top 82%' },
+      });
+    });
+  }, { scope: cardRef });
 
   return (
-    <div
-      ref={ref}
-      className={`${styles.featureCard} ${reverse ? styles.featureCardReverse : ''} ${styles.reveal} ${visible ? styles.revealVisible : ''}`}
-    >
-      <div className={styles.featureImageWrapper}>
+    <div ref={cardRef} className={`${styles.featureCard} ${reverse ? styles.featureCardReverse : ''}`}>
+      <div ref={imgRef} className={styles.featureImageWrapper}>
         <Image src={image} alt={title} fill style={{ objectFit: 'cover' }} />
       </div>
-      <div className={styles.featureText}>
+      <div ref={textRef} className={styles.featureText}>
         <h2 className={styles.featureTitle}>{title}</h2>
         <p className={styles.featureDesc}>{text}</p>
         <Link href={href} className={styles.featureCta}>{cta}</Link>
@@ -62,14 +84,37 @@ function FeatureCard({ image, title, text, cta, href, reverse }: typeof FEATURES
 }
 
 export default function Home() {
-  const categoriesRef = useRef<HTMLElement>(null);
-  const featuresRef = useRef<HTMLElement>(null);
-  const categoriesVisible = useRevealOnScroll(categoriesRef);
-  const featuresVisible = useRevealOnScroll(featuresRef);
+  const heroContentRef = useRef<HTMLDivElement>(null);
+  const heroTitleRef = useRef<HTMLHeadingElement>(null);
+  const heroSubtitleRef = useRef<HTMLParagraphElement>(null);
+  const heroCtasRef = useRef<HTMLDivElement>(null);
+  const categoriesGridRef = useRef<HTMLDivElement>(null);
+
+  useGSAP(() => {
+    gsap.matchMedia().add('(prefers-reduced-motion: no-preference)', () => {
+      gsap.from(
+        [heroTitleRef.current, heroSubtitleRef.current, heroCtasRef.current],
+        { y: 30, opacity: 0, duration: 0.7, stagger: 0.15, ease: 'power2.out' }
+      );
+    });
+  }, { scope: heroContentRef });
+
+  useGSAP(() => {
+    gsap.matchMedia().add('(prefers-reduced-motion: no-preference)', () => {
+      if (!categoriesGridRef.current) return;
+      gsap.from(Array.from(categoriesGridRef.current.children), {
+        y: 30,
+        opacity: 0,
+        duration: 0.5,
+        stagger: 0.1,
+        ease: 'power2.out',
+        scrollTrigger: { trigger: categoriesGridRef.current, start: 'top 80%' },
+      });
+    });
+  }, { scope: categoriesGridRef });
 
   return (
     <div className={styles.page}>
-      {/* Hero */}
       <section className={styles.hero}>
         <Image
           src="/mainbanner.jpg"
@@ -79,11 +124,10 @@ export default function Home() {
           priority
         />
         <div className={styles.heroOverlay} />
-        <div className={`${styles.heroContent} ${styles.pageEnter}`}>
-          <span className={styles.heroBadge}>Apple Premium Reseller · Madrid, Gran Vía</span>
-          <h1 className={styles.heroTitle}>Excelencia Apple,<br />sin complicaciones</h1>
-          <p className={styles.heroSubtitle}>La mejor selección de productos Apple con el servicio que mereces.</p>
-          <div className={styles.heroCtas}>
+        <div ref={heroContentRef} className={styles.heroContent}>
+          <h1 ref={heroTitleRef} className={styles.heroTitle}>Excelencia Apple,<br />sin complicaciones</h1>
+          <p ref={heroSubtitleRef} className={styles.heroSubtitle}>La mejor selección de productos Apple con el servicio que mereces.</p>
+          <div ref={heroCtasRef} className={styles.heroCtas}>
             <Link href="/buy/products" className={styles.ctaPrimary}>
               <Image src="/apple-logo.svg" alt="" width={18} height={18} className={styles.appleIcon} />
               Explorar catálogo
@@ -95,29 +139,21 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Categories */}
-      <section
-        ref={categoriesRef}
-        className={`${styles.categoriesSection} ${styles.reveal} ${categoriesVisible ? styles.revealVisible : ''}`}
-      >
+      <section className={styles.categoriesSection}>
         <div className={styles.sectionInner}>
           <h2 className={styles.sectionTitle}>¿Qué estás buscando?</h2>
-          <div className={styles.categoriesGrid}>
+          <div ref={categoriesGridRef} className={styles.categoriesGrid}>
             {CATEGORIES.map((cat) => (
               <Link key={cat.name} href={cat.href} className={styles.categoryCard}>
-                <span className={styles.categoryIcon}>{cat.icon}</span>
                 <span className={styles.categoryName}>{cat.name}</span>
+                <span className={styles.categoryArrow}>→</span>
               </Link>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Features */}
-      <section
-        ref={featuresRef}
-        className={`${styles.featuresSection} ${styles.reveal} ${featuresVisible ? styles.revealVisible : ''}`}
-      >
+      <section className={styles.featuresSection}>
         <div className={styles.sectionInner}>
           <h2 className={styles.sectionTitle}>Por qué elegir iVion</h2>
           <div className={styles.featuresList}>

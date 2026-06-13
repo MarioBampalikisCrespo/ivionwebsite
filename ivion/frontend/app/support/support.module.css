@@ -1,20 +1,20 @@
 .page {
   min-height: 100vh;
-  background-color: var(--background);
+  background: var(--background);
   color: var(--foreground);
 }
 
-/* Animations */
+/* ── Animations ──────────────────────────────────────────── */
 .pageEnter {
   opacity: 0;
-  transform: translateY(30px);
-  animation: fadeInUp 0.6s ease-out forwards;
+  transform: translateY(24px);
+  animation: fadeUp 0.5s ease-out forwards;
 }
 
 .reveal {
   opacity: 0;
-  transform: translateY(30px);
-  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+  transform: translateY(20px);
+  transition: opacity 0.5s ease-out, transform 0.5s ease-out;
 }
 
 .revealVisible {
@@ -22,57 +22,48 @@
   transform: translateY(0);
 }
 
-@keyframes fadeInUp {
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+@keyframes fadeUp {
+  to { opacity: 1; transform: translateY(0); }
 }
 
-/* Hero */
+/* ── Hero ────────────────────────────────────────────────── */
 .hero {
-  padding: 80px 24px;
+  padding: 80px 24px 72px;
   text-align: center;
-  max-width: 800px;
+  max-width: 760px;
   margin: 0 auto;
 }
 
-.badge {
+.eyebrow {
   display: inline-block;
-  background: #fff3e0;
-  color: #d97706;
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 600;
-  padding: 6px 14px;
-  border-radius: 20px;
-  margin-bottom: 20px;
-  letter-spacing: 0.04em;
+  color: var(--blue);
   text-transform: uppercase;
+  letter-spacing: 0.07em;
+  margin-bottom: 16px;
 }
 
 .heroTitle {
-  font-size: 48px;
+  font-size: clamp(36px, 5vw, 52px);
   font-weight: 700;
-  line-height: 1.15;
+  line-height: 1.08;
+  letter-spacing: -0.025em;
   margin-bottom: 20px;
 }
 
-.heroTitle span {
-  color: #d97706;
-}
-
 .heroSubtitle {
-  font-size: 18px;
-  color: #666;
-  line-height: 1.7;
-  max-width: 600px;
+  font-size: 17px;
+  color: var(--secondary);
+  line-height: 1.65;
+  max-width: 560px;
   margin: 0 auto;
 }
 
-/* Topics */
+/* ── Topics ──────────────────────────────────────────────── */
 .topicsSection {
   padding: 64px 24px;
-  background: var(--gray-alpha-100);
+  background: var(--surface);
 }
 
 .sectionInner {
@@ -81,68 +72,71 @@
 }
 
 .sectionTitle {
-  font-size: 28px;
+  font-size: 22px;
   font-weight: 600;
-  text-align: center;
-  margin-bottom: 40px;
+  letter-spacing: -0.02em;
+  margin-bottom: 32px;
 }
 
 .topicsGrid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 20px;
+  gap: 1px;
+  background: var(--border-light);
+  border: 1px solid var(--border-light);
+  border-radius: 18px;
+  overflow: hidden;
 }
 
 .topicCard {
   background: var(--background);
-  border: 1px solid var(--gray-alpha-200);
-  border-radius: 16px;
-  padding: 28px 24px;
+  padding: 28px 26px;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 8px;
   text-decoration: none;
   color: inherit;
-  transition: box-shadow 0.2s, transform 0.2s;
+  transition: background 0.15s;
 }
 
 .topicCard:hover {
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
-  transform: translateY(-2px);
-}
-
-.topicIcon {
-  font-size: 32px;
+  background: var(--surface);
 }
 
 .topicTitle {
-  font-size: 17px;
+  font-size: 15px;
   font-weight: 600;
+  letter-spacing: -0.01em;
 }
 
 .topicDesc {
-  font-size: 14px;
-  color: #666;
+  font-size: 13px;
+  color: var(--secondary);
   line-height: 1.6;
 }
 
-/* FAQ */
+.topicArrow {
+  margin-top: 4px;
+  font-size: 13px;
+  color: var(--blue);
+  font-weight: 500;
+}
+
+/* ── FAQ ─────────────────────────────────────────────────── */
 .faqSection {
-  padding: 64px 24px;
+  padding: 72px 24px;
 }
 
 .faqList {
-  max-width: 720px;
+  max-width: 680px;
   margin: 0 auto;
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  border-top: 1px solid var(--border-light);
 }
 
 .faqItem {
-  border: 1px solid var(--gray-alpha-200);
-  border-radius: 12px;
-  overflow: hidden;
+  border-bottom: 1px solid var(--border-light);
 }
 
 .faqQuestion {
@@ -150,30 +144,26 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 18px 24px;
+  padding: 20px 0;
   background: none;
   border: none;
   font-size: 15px;
-  font-weight: 600;
+  font-weight: 500;
   font-family: inherit;
-  color: inherit;
+  color: var(--foreground);
   cursor: pointer;
   text-align: left;
   gap: 16px;
-  transition: background 0.15s;
-}
-
-.faqQuestion:hover {
-  background: var(--gray-alpha-100);
+  letter-spacing: -0.01em;
 }
 
 .faqChevron {
-  font-size: 20px;
+  font-size: 18px;
   font-weight: 300;
   flex-shrink: 0;
+  color: var(--tertiary);
   transition: transform 0.2s;
   display: inline-block;
-  transform: rotate(0deg);
 }
 
 .faqChevronOpen {
@@ -181,52 +171,63 @@
 }
 
 .faqAnswer {
-  padding: 0 24px 18px;
+  padding: 0 0 20px;
   font-size: 14px;
-  color: #666;
+  color: var(--secondary);
   line-height: 1.7;
 }
 
-/* CTA */
+/* ── CTA ─────────────────────────────────────────────────── */
 .ctaSection {
   padding: 80px 24px;
   text-align: center;
-  background: var(--gray-alpha-100);
+  border-top: 1px solid var(--border-light);
 }
 
 .ctaTitle {
-  font-size: 28px;
+  font-size: clamp(24px, 3vw, 32px);
   font-weight: 700;
+  letter-spacing: -0.025em;
   margin-bottom: 12px;
 }
 
 .ctaSubtitle {
-  font-size: 16px;
-  color: #666;
-  max-width: 500px;
+  font-size: 15px;
+  color: var(--secondary);
+  max-width: 480px;
   margin: 0 auto 32px;
-  line-height: 1.7;
+  line-height: 1.65;
 }
 
 .ctaBtn {
   display: inline-flex;
   align-items: center;
-  padding: 14px 32px;
-  background: var(--foreground);
-  color: var(--background);
-  border-radius: 12px;
-  font-size: 16px;
-  font-weight: 600;
+  padding: 14px 28px;
+  background: var(--blue);
+  color: #fff;
+  border-radius: 980px;
+  font-size: 15px;
+  font-weight: 400;
   text-decoration: none;
-  transition: opacity 0.2s;
+  letter-spacing: -0.01em;
+  transition: background 0.2s;
 }
 
 .ctaBtn:hover {
-  opacity: 0.85;
+  background: var(--blue-hover);
 }
 
+/* ── Responsive ──────────────────────────────────────────── */
 @media (max-width: 768px) {
-  .heroTitle {
-    font-size: 32px;
+  .hero {
+    padding: 56px 22px 48px;
+  }
+
+  .topicsGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .sectionTitle {
+    font-size: 20px;
   }
 }

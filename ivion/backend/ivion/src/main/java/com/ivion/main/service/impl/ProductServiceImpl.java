@@ -27,7 +27,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     @Transactional(readOnly = true)
     public Optional<ProductDTO> findById(Integer id) {
-        return productRepository.findById(id).map(ProductDTO::from);
+        return productRepository.findByIdWithVariants(id).map(ProductDTO::from);
     }
 
     @Override

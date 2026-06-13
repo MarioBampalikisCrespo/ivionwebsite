@@ -1,3 +1,6 @@
+SET NAMES utf8mb4;
+SET CHARACTER SET utf8mb4;
+
 DROP SCHEMA IF EXISTS iviondb;
 
 CREATE SCHEMA IF NOT EXISTS iviondb;
@@ -52,6 +55,7 @@ CREATE TABLE IF NOT EXISTS cart_product (
     cart_id INT NOT NULL,
     product_id INT NOT NULL,
     quantity INT NOT NULL DEFAULT 1,
+    variant_id INT NULL,
     PRIMARY KEY (cart_id, product_id),
     FOREIGN KEY (cart_id) REFERENCES cart(ID),
     FOREIGN KEY (product_id) REFERENCES products(ID)
@@ -71,6 +75,7 @@ CREATE TABLE IF NOT EXISTS orders_products (
     product_id INT NOT NULL,
     quantity INT NOT NULL DEFAULT 1,
     unity_price DECIMAL(10,2) NOT NULL,
+    variant_id INT NULL,
     PRIMARY KEY (order_id, product_id),
     FOREIGN KEY (order_id) REFERENCES orders(ID),
     FOREIGN KEY (product_id) REFERENCES products(ID)
@@ -87,10 +92,19 @@ CREATE TABLE IF NOT EXISTS shipment (
     FOREIGN KEY (shipping_company_id) REFERENCES shipping_companies(ID)
 );
 
+CREATE TABLE IF NOT EXISTS product_variants (
+    ID INT AUTO_INCREMENT PRIMARY KEY,
+    product_id INT NOT NULL,
+    chip VARCHAR(50),
+    screen_size VARCHAR(10),
+    storage VARCHAR(20) NOT NULL,
+    memory VARCHAR(20) NOT NULL,
+    price DECIMAL(10,2) NOT NULL,
+    FOREIGN KEY (product_id) REFERENCES products(ID)
+);
+
 -- ===================== DATA =====================
 
-INSERT INTO users (username, usersurnames, userpassword, email)
-VALUES ('Mario', 'Bampalikis Crespo', 'bampalikis', 'bampa.cres.mario@gmail.com');
 
 INSERT INTO categories (categoryname, categorydescription) VALUES
 ('iPhone',    'Descubre nuestra selección de iPhone, la gama de smartphones de Apple que combina diseño, rendimiento y tecnología de vanguardia. Encuentra el modelo perfecto para ti: desde los más recientes hasta versiones anteriores al mejor precio'),
@@ -140,18 +154,11 @@ INSERT INTO products (productname, productdescription, productmemory, productsto
 
 -- Mac (categoryID = 3)
 INSERT INTO products (productname, productdescription, productmemory, productstorage, productimage, productprice, categoryID) VALUES
-('MacBook Air 13" (M4)',           'El portátil más fino y ligero de Apple, con chip M4, gran autonomía y pantalla Liquid Retina.',                    '8 GB',  '256 GB', 'images/macbookair13_m4.png',       1299.00, 3),
-('MacBook Air 13" (M4, 512 GB)',   'Versión ampliada del MacBook Air M4 con más almacenamiento y misma ligereza.',                                     '8 GB',  '512 GB', 'images/macbookair13_m4_512.png',   1499.00, 3),
-('MacBook Air 15" (M4)',           'Pantalla de 15.3", chip M4 y batería de hasta 18 horas. Ideal para trabajar o crear en cualquier lugar.',          '8 GB',  '512 GB', 'images/macbookair15_m4.png',       1599.00, 3),
-('MacBook Pro 14" (M4 Pro)',       'Rendimiento profesional con chip M4 Pro, pantalla Liquid Retina XDR y diseño de aluminio reciclado.',              '18 GB', '512 GB', 'images/macbookpro14_m4pro.png',    2099.00, 3),
-('MacBook Pro 14" (M5 Pro)',       'Versión 2025 del MacBook Pro con chip M5 Pro, el doble de eficiencia y un rendimiento gráfico superior.',          '18 GB', '1 TB',   'images/macbookpro14_m5pro.png',    2399.00, 3),
-('MacBook Pro 16" (M4 Max)',       'El MacBook Pro más potente. Chip M4 Max, 40 GB de memoria y pantalla XDR de 16".',                                '40 GB', '1 TB',   'images/macbookpro16_m4max.png',    2999.00, 3),
-('MacBook Pro 16" (M5 Max)',       'La versión 2025 con el nuevo chip M5 Max, rendimiento extremo y refrigeración mejorada.',                          '48 GB', '2 TB',   'images/macbookpro16_m5max.png',    3499.00, 3),
-('iMac 24" (M3)',                  'Todo en uno con chip M3, pantalla Retina 4.5K y diseño ultrafino en colores vibrantes.',                          '8 GB',  '256 GB', 'images/imac24_m3.png',             1599.00, 3),
-('iMac 24" (M3, 16 GB / 1 TB)',   'Configuración ampliada del iMac con más memoria y almacenamiento para tareas exigentes.',                          '16 GB', '1 TB',   'images/imac24_m3_1tb.png',         1899.00, 3),
-('iMac 27" (M4)',                  'El nuevo iMac 27" con chip M4 y pantalla Retina 5K. Ideal para profesionales de diseño y vídeo.',                 '24 GB', '1 TB',   'images/imac27_m4.png',             2499.00, 3),
-('Mac mini (M3)',                  'Potencia de escritorio en tamaño compacto. Chip M3 y múltiples opciones de conexión.',                             '8 GB',  '256 GB', 'images/macmini_m3.png',             749.00, 3),
-('Mac Studio (M4 Ultra)',          'Estación de trabajo compacta con chip M4 Ultra y rendimiento extremo para profesionales.',                         '64 GB', '2 TB',   'images/macstudio_m4ultra.png',     4199.00, 3);
+('MacBook Air',    'El portátil más fino y ligero de Apple. Elige tu chip, pantalla y almacenamiento para la configuración ideal.',                    '8 GB',  '256 GB', 'images/macbookair13_m4.png', 1299.00, 3),
+('MacBook Pro',    'Potencia profesional en formato portátil. Configura tu chip, pantalla y almacenamiento para un rendimiento sin límites.',          '18 GB', '512 GB', 'images/macbookpro.png',    2099.00, 3),
+('iMac',           'Todo en uno con pantalla Retina de alta resolución y chip Apple Silicon. Elige tu configuración.',                                 '8 GB',  '256 GB', 'images/imac.png',          1599.00, 3),
+('Mac mini (M3)',   'Potencia de escritorio en tamaño compacto. Chip M3 y múltiples opciones de conexión.',                                           '8 GB',  '256 GB', 'images/macmini_m3.png',     749.00, 3),
+('Mac Studio (M4 Ultra)', 'Estación de trabajo compacta con chip M4 Ultra y rendimiento extremo para profesionales.',                                 '64 GB', '2 TB',   'images/macstudio_m4ultra.png', 4199.00, 3);
 
 -- Accesorios (categoryID = 4)
 INSERT INTO products (productname, productdescription, productmemory, productstorage, productimage, productprice, categoryID) VALUES
@@ -171,3 +178,33 @@ INSERT INTO products (productname, productdescription, productmemory, productsto
 ('Apple Pencil (USB-C)',                 'Lápiz preciso y asequible compatible con iPad (10ª generación) y posteriores.',                          'N/A', 'N/A', 'images/applepencil_usbc.png',           89.00, 4),
 ('Apple Watch Ultra 2',                  'Reloj inteligente de alto rendimiento con GPS de precisión, caja de titanio y resistencia 100 m.',       'N/A', 'N/A', 'images/applewatchultra2.png',          899.00, 4),
 ('Correa Loop deportiva 45mm',           'Correa transpirable y ligera, perfecta para entrenamientos o uso diario.',                               'N/A', 'N/A', 'images/correa_loop_verde45.png',        59.00, 4);
+
+-- MacBook Air variants (chip · pantalla · almacenamiento)
+INSERT INTO product_variants (product_id, chip, screen_size, storage, memory, price) SELECT ID, 'M4', '13"', '256 GB', '8 GB',  1299.00 FROM products WHERE productname = 'MacBook Air';
+INSERT INTO product_variants (product_id, chip, screen_size, storage, memory, price) SELECT ID, 'M4', '13"', '512 GB', '8 GB',  1499.00 FROM products WHERE productname = 'MacBook Air';
+INSERT INTO product_variants (product_id, chip, screen_size, storage, memory, price) SELECT ID, 'M4', '13"', '1 TB',   '16 GB', 1699.00 FROM products WHERE productname = 'MacBook Air';
+INSERT INTO product_variants (product_id, chip, screen_size, storage, memory, price) SELECT ID, 'M4', '15"', '256 GB', '8 GB',  1399.00 FROM products WHERE productname = 'MacBook Air';
+INSERT INTO product_variants (product_id, chip, screen_size, storage, memory, price) SELECT ID, 'M4', '15"', '512 GB', '8 GB',  1599.00 FROM products WHERE productname = 'MacBook Air';
+INSERT INTO product_variants (product_id, chip, screen_size, storage, memory, price) SELECT ID, 'M4', '15"', '1 TB',   '16 GB', 1799.00 FROM products WHERE productname = 'MacBook Air';
+
+-- MacBook Pro variants (chip · pantalla · almacenamiento)
+INSERT INTO product_variants (product_id, chip, screen_size, storage, memory, price) SELECT ID, 'M4 Pro', '14"', '512 GB', '18 GB', 2099.00 FROM products WHERE productname = 'MacBook Pro';
+INSERT INTO product_variants (product_id, chip, screen_size, storage, memory, price) SELECT ID, 'M4 Pro', '14"', '1 TB',   '24 GB', 2399.00 FROM products WHERE productname = 'MacBook Pro';
+INSERT INTO product_variants (product_id, chip, screen_size, storage, memory, price) SELECT ID, 'M4 Pro', '14"', '2 TB',   '24 GB', 2699.00 FROM products WHERE productname = 'MacBook Pro';
+INSERT INTO product_variants (product_id, chip, screen_size, storage, memory, price) SELECT ID, 'M5 Pro', '14"', '512 GB', '18 GB', 2399.00 FROM products WHERE productname = 'MacBook Pro';
+INSERT INTO product_variants (product_id, chip, screen_size, storage, memory, price) SELECT ID, 'M5 Pro', '14"', '1 TB',   '24 GB', 2699.00 FROM products WHERE productname = 'MacBook Pro';
+INSERT INTO product_variants (product_id, chip, screen_size, storage, memory, price) SELECT ID, 'M5 Pro', '14"', '2 TB',   '24 GB', 2999.00 FROM products WHERE productname = 'MacBook Pro';
+INSERT INTO product_variants (product_id, chip, screen_size, storage, memory, price) SELECT ID, 'M4 Max', '16"', '1 TB',   '36 GB', 2999.00 FROM products WHERE productname = 'MacBook Pro';
+INSERT INTO product_variants (product_id, chip, screen_size, storage, memory, price) SELECT ID, 'M4 Max', '16"', '2 TB',   '36 GB', 3299.00 FROM products WHERE productname = 'MacBook Pro';
+INSERT INTO product_variants (product_id, chip, screen_size, storage, memory, price) SELECT ID, 'M4 Max', '16"', '4 TB',   '48 GB', 3699.00 FROM products WHERE productname = 'MacBook Pro';
+INSERT INTO product_variants (product_id, chip, screen_size, storage, memory, price) SELECT ID, 'M5 Max', '16"', '1 TB',   '48 GB', 3499.00 FROM products WHERE productname = 'MacBook Pro';
+INSERT INTO product_variants (product_id, chip, screen_size, storage, memory, price) SELECT ID, 'M5 Max', '16"', '2 TB',   '48 GB', 3799.00 FROM products WHERE productname = 'MacBook Pro';
+INSERT INTO product_variants (product_id, chip, screen_size, storage, memory, price) SELECT ID, 'M5 Max', '16"', '4 TB',   '64 GB', 4199.00 FROM products WHERE productname = 'MacBook Pro';
+
+-- iMac variants (chip · pantalla · almacenamiento)
+INSERT INTO product_variants (product_id, chip, screen_size, storage, memory, price) SELECT ID, 'M3', '24"', '256 GB', '8 GB',  1599.00 FROM products WHERE productname = 'iMac';
+INSERT INTO product_variants (product_id, chip, screen_size, storage, memory, price) SELECT ID, 'M3', '24"', '512 GB', '8 GB',  1749.00 FROM products WHERE productname = 'iMac';
+INSERT INTO product_variants (product_id, chip, screen_size, storage, memory, price) SELECT ID, 'M3', '24"', '1 TB',   '16 GB', 1899.00 FROM products WHERE productname = 'iMac';
+INSERT INTO product_variants (product_id, chip, screen_size, storage, memory, price) SELECT ID, 'M4', '27"', '512 GB', '16 GB', 2199.00 FROM products WHERE productname = 'iMac';
+INSERT INTO product_variants (product_id, chip, screen_size, storage, memory, price) SELECT ID, 'M4', '27"', '1 TB',   '24 GB', 2499.00 FROM products WHERE productname = 'iMac';
+INSERT INTO product_variants (product_id, chip, screen_size, storage, memory, price) SELECT ID, 'M4', '27"', '2 TB',   '32 GB', 2799.00 FROM products WHERE productname = 'iMac';

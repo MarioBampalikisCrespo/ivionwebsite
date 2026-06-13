@@ -18,7 +18,7 @@ export default function useRevealOnScroll<T extends HTMLElement>(
   },
   {
     threshold: 0,
-    rootMargin: "0px 0px -20% 0px" // disparar antes de que el elemento entre completamente
+    rootMargin: "0px 0px -20% 0px"
   }
 );
 

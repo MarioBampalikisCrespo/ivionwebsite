@@ -1,17 +1,41 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { CiUser, CiShoppingCart } from 'react-icons/ci';
+import gsap from 'gsap';
+import { useGSAP } from '@gsap/react';
 import { useAuth } from '../context/AuthContext';
 import styles from './navbar.module.css';
 
+gsap.registerPlugin(useGSAP);
+
 export default function Navbar() {
   const [activePanel, setActivePanel] = useState<'productos' | 'servicios' | null>(null);
+  const [navHeight, setNavHeight] = useState(80);
+  const navRef = useRef<HTMLElement>(null);
+  const panelRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
   const { isAuthenticated, user, logout } = useAuth();
+
+  useGSAP(() => {
+    if (activePanel && panelRef.current) {
+      gsap.matchMedia().add('(prefers-reduced-motion: no-preference)', () => {
+        gsap.from(panelRef.current!, { y: -12, opacity: 0, duration: 0.28, ease: 'power2.out' });
+      });
+    }
+  }, { dependencies: [activePanel] });
+
+  useEffect(() => {
+    const updateHeight = () => {
+      if (navRef.current) setNavHeight(navRef.current.offsetHeight);
+    };
+    updateHeight();
+    window.addEventListener('resize', updateHeight);
+    return () => window.removeEventListener('resize', updateHeight);
+  }, []);
 
   const togglePanel = (panel: 'productos' | 'servicios') => {
     setActivePanel((prev) => (prev === panel ? null : panel));
@@ -32,7 +56,7 @@ export default function Navbar() {
 
   return (
     <>
-      <nav className={styles.nav}>
+      <nav className={styles.nav} ref={navRef}>
         <div className={styles.logoGroup}>
           <Link href="/">
             <Image
@@ -96,7 +120,7 @@ export default function Navbar() {
       </nav>
 
       {activePanel && (
-        <div className={styles.dropdownPanel}>
+        <div ref={panelRef} className={styles.dropdownPanel} style={{ top: navHeight }}>
           <button className={styles.closeButton} onClick={() => setActivePanel(null)}>×</button>
           {activePanel === 'productos' && (
             <div className={styles.panelContent}>

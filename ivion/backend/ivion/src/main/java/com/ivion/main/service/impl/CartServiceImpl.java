@@ -21,6 +21,7 @@ public class CartServiceImpl implements CartService {
     private final CartRepository cartRepository;
     private final CartProductRepository cartProductRepository;
     private final ProductRepository productRepository;
+    private final ProductVariantRepository productVariantRepository;
 
     @Override
     @Transactional(readOnly = true)
@@ -34,7 +35,7 @@ public class CartServiceImpl implements CartService {
 
     @Override
     @Transactional
-    public CartDTO addProduct(Integer userId, Integer productId, int quantity) {
+    public CartDTO addProduct(Integer userId, Integer productId, int quantity, Integer variantId) {
         Cart cart = cartRepository.findByUserId(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("Carrito no encontrado para el usuario " + userId));
         Product product = productRepository.findById(productId)
@@ -42,8 +43,9 @@ public class CartServiceImpl implements CartService {
 
         CartProductId cpId = new CartProductId(cart.getId(), productId);
         CartProduct cp = cartProductRepository.findById(cpId)
-                .orElse(new CartProduct(cpId, cart, product, 0));
+                .orElse(new CartProduct(cpId, cart, product, 0, variantId));
         cp.setQuantity(cp.getQuantity() + quantity);
+        if (variantId != null) cp.setVariantId(variantId);
         cartProductRepository.save(cp);
 
         recalculateTotal(cart);
@@ -71,8 +73,14 @@ public class CartServiceImpl implements CartService {
 
     private void recalculateTotal(Cart cart) {
         BigDecimal total = cartProductRepository.findByCartId(cart.getId()).stream()
-                .map(cp -> cp.getProduct().getProductPrice()
-                        .multiply(BigDecimal.valueOf(cp.getQuantity())))
+                .map(cp -> {
+                    BigDecimal unitPrice = (cp.getVariantId() != null)
+                            ? productVariantRepository.findById(cp.getVariantId())
+                                .map(ProductVariant::getPrice)
+                                .orElse(cp.getProduct().getProductPrice())
+                            : cp.getProduct().getProductPrice();
+                    return unitPrice.multiply(BigDecimal.valueOf(cp.getQuantity()));
+                })
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
         cart.setTotal(total);
     }

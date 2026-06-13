@@ -23,4 +23,7 @@ public class CartProduct {
 
     @Column(name = "quantity", nullable = false)
     private Integer quantity = 1;
+
+    @Column(name = "variant_id")
+    private Integer variantId;
 }

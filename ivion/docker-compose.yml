@@ -7,7 +7,7 @@ services:
       MYSQL_DATABASE: iviondb
     volumes:
       - mysql_data:/var/lib/mysql
-      - ./db/iviondb.sql:/docker-entrypoint-initdb.d/iviondb.sql
+      - ./backend/db/iviondb.sql:/docker-entrypoint-initdb.d/iviondb.sql
     ports:
       - "3306:3306"
     healthcheck:
@@ -19,18 +19,31 @@ services:
 
   app:
     build:
-      context: ./ivion
+      context: ./backend/ivion
       dockerfile: Dockerfile
     container_name: ivion-app
     environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/iviondb?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/iviondb?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true&useUnicode=true&characterEncoding=UTF-8&sessionVariables=character_set_client=utf8mb4,character_set_connection=utf8mb4,character_set_results=utf8mb4
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: ivion_root
+      SERVER_PORT: 8080
     ports:
-      - "8080:8080"
+      - "8081:8080"
     depends_on:
       mysql:
         condition: service_healthy
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: ivion-frontend
+    environment:
+      NEXT_PUBLIC_API_URL: http://localhost:8081
+    ports:
+      - "3000:3000"
+    depends_on:
+      - app
 
 volumes:
   mysql_data:

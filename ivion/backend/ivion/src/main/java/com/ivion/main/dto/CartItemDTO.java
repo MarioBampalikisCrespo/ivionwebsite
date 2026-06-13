@@ -10,8 +10,9 @@ public class CartItemDTO {
 
     private ProductDTO product;
     private Integer quantity;
+    private Integer variantId;
 
     public static CartItemDTO from(CartProduct cp) {
-        return new CartItemDTO(ProductDTO.from(cp.getProduct()), cp.getQuantity());
+        return new CartItemDTO(ProductDTO.from(cp.getProduct()), cp.getQuantity(), cp.getVariantId());
     }
 }

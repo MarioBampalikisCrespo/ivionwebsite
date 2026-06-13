@@ -7,37 +7,31 @@ import styles from './support.module.css';
 
 const TOPICS = [
   {
-    icon: '📦',
     title: 'Pedidos y envíos',
     desc: 'Consulta el estado de tu pedido, tiempos de entrega y opciones de envío disponibles.',
     href: '/contact',
   },
   {
-    icon: '↩️',
     title: 'Devoluciones',
     desc: 'Tienes 14 días desde la recepción para devolver cualquier producto en perfecto estado.',
     href: '/contact',
   },
   {
-    icon: '🛡️',
     title: 'Garantía',
     desc: 'Todos los productos incluyen garantía oficial Apple de 1 año ampliable con AppleCare+.',
     href: '/contact',
   },
   {
-    icon: '🔧',
     title: 'Reparaciones',
     desc: 'Servicio técnico autorizado Apple. Diagnóstico gratuito y reparación express.',
     href: '/services/repair',
   },
   {
-    icon: '💳',
     title: 'Pagos y financiación',
     desc: 'Financiación sin intereses de 3 a 24 meses en productos seleccionados.',
     href: '/contact',
   },
   {
-    icon: '🔐',
     title: 'Cuenta y seguridad',
     desc: 'Gestiona tu cuenta, cambia tu contraseña o recupera el acceso a tu perfil.',
     href: '/account',
@@ -84,19 +78,15 @@ export default function SupportPage() {
 
   return (
     <div className={styles.page}>
-      {/* Hero */}
       <section className={`${styles.hero} ${styles.pageEnter}`}>
-        <span className={styles.badge}>Centro de ayuda</span>
-        <h1 className={styles.heroTitle}>
-          ¿En qué podemos <span>ayudarte?</span>
-        </h1>
+        <span className={styles.eyebrow}>Centro de ayuda</span>
+        <h1 className={styles.heroTitle}>¿En qué podemos ayudarte?</h1>
         <p className={styles.heroSubtitle}>
           Encuentra respuesta a tus dudas o contacta con nuestro equipo de soporte.
-          Estamos disponibles de lunes a viernes de 9:00 a 20:00.
+          Disponibles de lunes a viernes de 9:00 a 20:00.
         </p>
       </section>
 
-      {/* Topics */}
       <section
         ref={topicsRef}
         className={`${styles.topicsSection} ${styles.reveal} ${topicsVisible ? styles.revealVisible : ''}`}
@@ -106,16 +96,15 @@ export default function SupportPage() {
           <div className={styles.topicsGrid}>
             {TOPICS.map((topic) => (
               <Link key={topic.title} href={topic.href} className={styles.topicCard}>
-                <span className={styles.topicIcon}>{topic.icon}</span>
                 <p className={styles.topicTitle}>{topic.title}</p>
                 <p className={styles.topicDesc}>{topic.desc}</p>
+                <span className={styles.topicArrow}>Más información ↗</span>
               </Link>
             ))}
           </div>
         </div>
       </section>
 
-      {/* FAQ */}
       <section
         ref={faqRef}
         className={`${styles.faqSection} ${styles.reveal} ${faqVisible ? styles.revealVisible : ''}`}
@@ -141,7 +130,6 @@ export default function SupportPage() {
         </div>
       </section>
 
-      {/* CTA */}
       <section
         ref={ctaRef}
         className={`${styles.ctaSection} ${styles.reveal} ${ctaVisible ? styles.revealVisible : ''}`}

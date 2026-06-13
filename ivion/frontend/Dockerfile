@@ -1,14 +1,11 @@
-FROM node:22-alpine AS deps
-WORKDIR /app
-COPY package*.json ./
-RUN npm ci
-
 FROM node:22-alpine AS builder
 WORKDIR /app
-COPY --from=deps /app/node_modules ./node_modules
+RUN corepack enable
+COPY package.json yarn.lock .yarnrc.yml ./
+RUN yarn install --immutable
 COPY . .
-ENV NEXT_PUBLIC_API_URL=http://localhost:8080
-RUN npm run build
+ENV NEXT_PUBLIC_API_URL=http://localhost:8081
+RUN yarn build
 
 FROM node:22-alpine AS runner
 WORKDIR /app

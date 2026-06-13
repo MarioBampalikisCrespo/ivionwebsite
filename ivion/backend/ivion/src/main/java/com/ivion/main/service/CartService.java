@@ -5,6 +5,6 @@ import java.util.Optional;
 
 public interface CartService {
     Optional<CartDTO> findByUserId(Integer userId);
-    CartDTO addProduct(Integer userId, Integer productId, int quantity);
+    CartDTO addProduct(Integer userId, Integer productId, int quantity, Integer variantId);
     CartDTO removeProduct(Integer userId, Integer productId);
 }

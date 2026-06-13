@@ -1,64 +1,67 @@
 .page {
   min-height: 100vh;
-  padding: 40px 24px;
+  padding: 40px 48px 80px;
   max-width: 900px;
   margin: 0 auto;
 }
 
 .title {
-  font-size: 32px;
-  font-weight: 600;
-  margin-bottom: 32px;
+  font-size: clamp(28px, 4vw, 48px);
+  font-weight: 700;
+  margin-bottom: 40px;
+  letter-spacing: -0.025em;
 }
 
 .empty {
   text-align: center;
-  padding: 80px 24px;
-  color: #888;
+  padding: 96px 24px;
+  color: var(--secondary);
 }
 
 .empty p {
-  font-size: 16px;
-  margin-bottom: 16px;
+  font-size: 17px;
+  margin-bottom: 24px;
+  letter-spacing: -0.01em;
 }
 
 .shopLink {
   display: inline-block;
-  padding: 12px 24px;
-  background: var(--foreground);
-  color: var(--background);
-  border-radius: 10px;
-  font-weight: 600;
+  padding: 13px 26px;
+  background: var(--blue);
+  color: #fff;
+  border-radius: 980px;
+  font-size: 17px;
+  font-weight: 400;
   text-decoration: none;
-  transition: opacity 0.2s;
+  letter-spacing: -0.01em;
+  transition: background 0.2s;
 }
 
 .shopLink:hover {
-  opacity: 0.85;
+  background: var(--blue-hover);
 }
 
 .items {
   display: flex;
   flex-direction: column;
-  gap: 16px;
-  margin-bottom: 32px;
+  gap: 12px;
+  margin-bottom: 28px;
 }
 
 .item {
   display: flex;
   align-items: center;
   gap: 16px;
-  padding: 16px;
-  border: 1px solid var(--gray-alpha-200);
-  border-radius: 12px;
-  background: var(--background);
+  padding: 20px;
+  border-radius: 16px;
+  background: var(--surface);
 }
 
 .imageBox {
   width: 80px;
   height: 80px;
-  border-radius: 10px;
-  background: var(--gray-alpha-100);
+  border-radius: 12px;
+  background: var(--background);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -73,44 +76,56 @@
 
 .itemInfo {
   flex: 1;
+  min-width: 0;
 }
 
 .itemName {
-  font-size: 16px;
+  font-size: 17px;
   font-weight: 600;
+  margin-bottom: 4px;
+  letter-spacing: -0.02em;
+}
+
+.itemVariant {
+  font-size: 12px;
+  color: var(--tertiary);
+  letter-spacing: -0.01em;
   margin-bottom: 4px;
 }
 
 .itemPrice {
   font-size: 14px;
-  color: #888;
+  color: var(--secondary);
+  letter-spacing: -0.01em;
 }
 
 .itemSubtotal {
-  font-size: 16px;
-  font-weight: 700;
+  font-size: 17px;
+  font-weight: 600;
   margin-left: auto;
+  letter-spacing: -0.02em;
+  flex-shrink: 0;
 }
 
 .removeBtn {
   background: none;
   border: none;
-  color: #e53e3e;
+  color: var(--tertiary);
   font-size: 20px;
   cursor: pointer;
   padding: 4px;
   flex-shrink: 0;
-  transition: opacity 0.2s;
+  transition: color 0.15s;
 }
 
 .removeBtn:hover {
-  opacity: 0.7;
+  color: var(--danger);
 }
 
 .summary {
-  border: 1px solid var(--gray-alpha-200);
-  border-radius: 16px;
-  padding: 24px;
+  background: var(--surface);
+  border-radius: 20px;
+  padding: 28px;
   display: flex;
   flex-direction: column;
   gap: 16px;
@@ -121,6 +136,8 @@
   justify-content: space-between;
   align-items: center;
   font-size: 15px;
+  color: var(--secondary);
+  letter-spacing: -0.01em;
 }
 
 .summaryTotal {
@@ -130,57 +147,230 @@
   font-size: 20px;
   font-weight: 700;
   padding-top: 16px;
-  border-top: 1px solid var(--gray-alpha-200);
+  border-top: 1px solid var(--border-light);
+  letter-spacing: -0.025em;
 }
 
 .checkoutBtn {
   padding: 16px;
-  background: var(--foreground);
-  color: var(--background);
+  background: var(--blue);
+  color: #fff;
   border: none;
-  border-radius: 12px;
+  border-radius: 980px;
   font-size: 17px;
-  font-weight: 600;
+  font-weight: 400;
   cursor: pointer;
   font-family: inherit;
-  transition: opacity 0.2s;
+  letter-spacing: -0.01em;
+  transition: background 0.2s;
+  margin-top: 4px;
 }
 
 .checkoutBtn:hover {
-  opacity: 0.85;
+  background: var(--blue-hover);
 }
 
 .checkoutBtn:disabled {
-  opacity: 0.5;
+  opacity: 0.4;
   cursor: not-allowed;
+}
+
+/* ── Modal header ── */
+.modalHeader {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.modalStep {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--blue);
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+}
+
+/* ── Card preview ── */
+.cardPreview {
+  background: linear-gradient(135deg, #1d1d1f 0%, #3a3a3c 100%);
+  border-radius: 16px;
+  padding: 22px 24px 20px;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  user-select: none;
+}
+
+.cardChip {
+  width: 34px;
+  height: 26px;
+  background: linear-gradient(135deg, #d4a843, #f0c060);
+  border-radius: 5px;
+}
+
+.cardNumber {
+  font-size: 18px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  font-variant-numeric: tabular-nums;
+}
+
+.cardBottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  opacity: 0.85;
+}
+
+.cardName {
+  font-weight: 600;
+  letter-spacing: 0.08em;
+}
+
+.cardExpiry {
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── Pay fields ── */
+.payFields {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.payRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.payTotal {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 0;
+  border-top: 1px solid var(--border-light);
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+/* ── Processing ── */
+.processingScreen {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 0 8px;
+}
+
+.spinner {
+  width: 44px;
+  height: 44px;
+  border: 3px solid var(--border-light);
+  border-top-color: var(--blue);
+  border-radius: 50%;
+  animation: spin 0.75s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.processingTitle {
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+.processingDesc {
+  font-size: 13px;
+  color: var(--tertiary);
+  letter-spacing: -0.01em;
+}
+
+/* ── Success ── */
+.successScreen {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  text-align: center;
+  padding: 8px 0;
+}
+
+.successIcon {
+  width: 56px;
+  height: 56px;
+  background: var(--success);
+  color: #fff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  font-weight: 700;
+  animation: popIn 0.4s cubic-bezier(0.34, 1.4, 0.64, 1) both;
+}
+
+@keyframes popIn {
+  from { transform: scale(0); opacity: 0; }
+  to   { transform: scale(1); opacity: 1; }
+}
+
+.successTitle {
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: -0.025em;
+}
+
+.successOrderId {
+  font-size: 13px;
+  color: var(--tertiary);
+  letter-spacing: -0.01em;
+}
+
+.successDesc {
+  font-size: 14px;
+  color: var(--secondary);
+  line-height: 1.6;
+  max-width: 320px;
+  letter-spacing: -0.01em;
 }
 
 /* Checkout modal */
 .overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(0,0,0,0.4);
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 2000;
   padding: 24px;
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
 }
 
 .modal {
   background: var(--background);
-  border-radius: 20px;
-  padding: 40px;
+  border-radius: 24px;
+  padding: 44px 40px 36px;
   width: 100%;
   max-width: 480px;
   display: flex;
   flex-direction: column;
   gap: 20px;
+  box-shadow: 0 24px 80px rgba(0,0,0,0.18);
 }
 
 .modalTitle {
   font-size: 22px;
-  font-weight: 600;
+  font-weight: 700;
+  letter-spacing: -0.025em;
 }
 
 .modalField {
@@ -190,87 +380,115 @@
 }
 
 .modalLabel {
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 500;
+  color: var(--secondary);
+  letter-spacing: -0.01em;
 }
 
 .modalInput {
-  padding: 12px 14px;
-  border: 1px solid var(--gray-alpha-200);
-  border-radius: 10px;
-  font-size: 15px;
-  background-color: var(--background);
-  color: inherit;
+  padding: 11px 17px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  font-size: 17px;
+  background: var(--background);
+  color: var(--foreground);
   outline: none;
   font-family: inherit;
-  transition: border-color 0.2s;
+  letter-spacing: -0.01em;
+  transition: border-color 0.2s, box-shadow 0.2s;
 }
 
 .modalInput:focus {
-  border-color: #0070f3;
+  border-color: var(--blue);
+  box-shadow: 0 0 0 3px rgba(0,113,227,0.18);
 }
 
 .modalActions {
   display: flex;
   gap: 12px;
+  margin-top: 4px;
 }
 
 .cancelBtn {
   flex: 1;
   padding: 13px;
-  background: var(--gray-alpha-100);
-  color: inherit;
-  border: 1px solid var(--gray-alpha-200);
-  border-radius: 10px;
-  font-size: 15px;
+  background: var(--surface);
+  color: var(--foreground);
+  border: none;
+  border-radius: 980px;
+  font-size: 16px;
   font-weight: 500;
   cursor: pointer;
   font-family: inherit;
+  letter-spacing: -0.01em;
   transition: background 0.2s;
 }
 
 .cancelBtn:hover {
-  background: var(--gray-alpha-200);
+  background: var(--border-light);
 }
 
 .confirmBtn {
   flex: 1;
   padding: 13px;
-  background: var(--foreground);
-  color: var(--background);
+  background: var(--blue);
+  color: #fff;
   border: none;
-  border-radius: 10px;
-  font-size: 15px;
-  font-weight: 600;
+  border-radius: 980px;
+  font-size: 16px;
+  font-weight: 400;
   cursor: pointer;
   font-family: inherit;
-  transition: opacity 0.2s;
+  letter-spacing: -0.01em;
+  transition: background 0.2s;
 }
 
 .confirmBtn:hover {
-  opacity: 0.85;
+  background: var(--blue-hover);
 }
 
 .confirmBtn:disabled {
-  opacity: 0.5;
+  opacity: 0.4;
   cursor: not-allowed;
 }
 
 .successMsg {
-  color: #38a169;
+  color: var(--success);
   font-size: 14px;
   font-weight: 500;
   text-align: center;
+  letter-spacing: -0.01em;
 }
 
 .errorMsg {
-  color: #e53e3e;
+  color: var(--danger);
   font-size: 14px;
   text-align: center;
+  letter-spacing: -0.01em;
 }
 
 .loading {
   text-align: center;
-  padding: 80px 24px;
-  color: #888;
+  padding: 96px 24px;
+  color: var(--tertiary);
+}
+
+@media (max-width: 600px) {
+  .page {
+    padding: 24px 22px 64px;
+  }
+
+  .item {
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .itemSubtotal {
+    margin-left: 0;
+  }
+
+  .modal {
+    padding: 32px 24px 28px;
+  }
 }

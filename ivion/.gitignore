@@ -1,0 +1,132 @@
+##############################
+## Java
+##############################
+.mtj.tmp/
+*.class
+*.jar
+*.war
+*.ear
+*.nar
+hs_err_pid*
+
+##############################
+## Maven
+##############################
+target/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+pom.xml.bak
+release.properties
+dependency-reduced-pom.xml
+buildNumber.properties
+.mvn/timing.properties
+.mvn/wrapper/maven-wrapper.jar
+
+##############################
+## Gradle
+##############################
+bin/
+build/
+.gradle
+.gradletasknamecache
+gradle-app.setting
+!gradle-wrapper.jar
+
+##############################
+## IntelliJ
+##############################
+out/
+.idea/
+.idea_modules/
+*.iml
+*.ipr
+*.iws
+
+##############################
+## Eclipse
+##############################
+.settings/
+*/bin/
+tmp/
+.metadata
+.classpath
+.project
+*.tmp
+*.bak
+*.swp
+*~.nib
+local.properties
+.loadpath
+.factorypath
+
+######################
+# Parte de eclipse para colocar en la raíz del workspace
+#######################
+*/.settings/
+*/bin/
+*/tmp/
+*/.classpath
+*/.project
+*/*.tmp
+*/*.bak
+*/*.swp
+*/*~.nib
+*/local.properties
+*/.loadpath
+*/.factorypath
+
+##############################
+## NetBeans
+##############################
+nbproject/private/
+build/
+nbbuild/
+dist/
+nbdist/
+nbactions.xml
+nb-configuration.xml
+
+##############################
+## Visual Studio Code
+##############################
+.vscode/
+.code-workspace
+
+##############################
+## OS X / Windows
+##############################
+.DS_Store
+Thumbs.db
+desktop.ini
+
+##############################
+## Node / Frontend
+##############################
+node_modules/
+.next/
+.yarn/cache
+.yarn/install-state.gz
+tsconfig.tsbuildinfo
+
+##############################
+## Environment variables
+##############################
+.env
+.env.local
+.env.*.local
+
+##############################
+## Logs
+##############################
+*.log
+yarn-debug.log*
+yarn-error.log*
+
+##############################
+## Agents
+##############################
+.agents/
+.claude/
+skills-lock.json

@@ -41,6 +41,9 @@ public class Product {
     private Colour colour;
 
     @OneToMany(mappedBy = "product", fetch = FetchType.LAZY)
+    private List<ProductVariant> variants;
+
+    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY)
     private List<CartProduct> cartProducts;
 
     @OneToMany(mappedBy = "product", fetch = FetchType.LAZY)

@@ -6,7 +6,6 @@ import styles from './maintenance.module.css';
 
 const PLANS = [
   {
-    icon: '🔧',
     name: 'Básico',
     price: '29',
     features: [
@@ -15,10 +14,8 @@ const PLANS = [
       'Revisión del estado de la batería',
       'Informe de diagnóstico',
     ],
-    featured: false,
   },
   {
-    icon: '⭐',
     name: 'Completo',
     price: '59',
     features: [
@@ -28,10 +25,8 @@ const PLANS = [
       'Revisión de hardware completa',
       'Copia de seguridad incluida',
     ],
-    featured: true,
   },
   {
-    icon: '🏆',
     name: 'Premium',
     price: '99',
     features: [
@@ -41,132 +36,85 @@ const PLANS = [
       'Prioridad en atención',
       'Garantía extendida de 12 meses',
     ],
-    featured: false,
   },
 ];
 
 const INCLUDED = [
-  {
-    icon: '🧹',
-    name: 'Limpieza interna',
-    desc: 'Eliminamos el polvo acumulado en ventiladores, rejillas y componentes internos para mejorar la refrigeración.',
-  },
-  {
-    icon: '⬆️',
-    name: 'Actualización de software',
-    desc: 'Instalamos las últimas versiones de iOS, macOS y apps para garantizar seguridad y rendimiento óptimo.',
-  },
-  {
-    icon: '🔋',
-    name: 'Revisión de batería',
-    desc: 'Analizamos el ciclo y estado de la batería e informamos si necesita sustitución próximamente.',
-  },
-  {
-    icon: '🛡️',
-    name: 'Revisión de seguridad',
-    desc: 'Comprobamos que el dispositivo no tiene malware, perfiles de configuración sospechosos ni vulnerabilidades conocidas.',
-  },
-  {
-    icon: '💾',
-    name: 'Copia de seguridad',
-    desc: 'Realizamos una copia de seguridad completa antes de cualquier intervención para proteger tus datos.',
-  },
-  {
-    icon: '📊',
-    name: 'Informe detallado',
-    desc: 'Recibirás un informe completo con el estado de tu dispositivo y recomendaciones personalizadas.',
-  },
+  { name: 'Limpieza interna',      desc: 'Eliminamos el polvo acumulado en ventiladores, rejillas y componentes internos para mejorar la refrigeración.' },
+  { name: 'Actualización de software', desc: 'Instalamos las últimas versiones de iOS, macOS y apps para garantizar seguridad y rendimiento óptimo.' },
+  { name: 'Revisión de batería',   desc: 'Analizamos el ciclo y estado de la batería e informamos si necesita sustitución próximamente.' },
+  { name: 'Revisión de seguridad', desc: 'Comprobamos que el dispositivo no tiene malware, perfiles sospechosos ni vulnerabilidades conocidas.' },
+  { name: 'Copia de seguridad',    desc: 'Realizamos una copia completa antes de cualquier intervención para proteger tus datos.' },
+  { name: 'Informe detallado',     desc: 'Recibirás un informe completo con el estado de tu dispositivo y recomendaciones personalizadas.' },
 ];
 
 const FREQUENCY = [
-  {
-    icon: '📱',
-    device: 'iPhone',
-    period: 'Cada 12 meses',
-    desc: 'Limpieza, batería y actualización de software.',
-  },
-  {
-    icon: '💻',
-    device: 'MacBook',
-    period: 'Cada 6 meses',
-    desc: 'Limpieza de ventiladores y pasta térmica.',
-  },
-  {
-    icon: '🖥️',
-    device: 'iMac',
-    period: 'Cada 12 meses',
-    desc: 'Limpieza interna y revisión de componentes.',
-  },
-  {
-    icon: '📱',
-    device: 'iPad',
-    period: 'Cada 12 meses',
-    desc: 'Revisión de batería y actualización de software.',
-  },
+  { device: 'iPhone',  period: 'Cada 12 meses', desc: 'Limpieza, batería y actualización de software.' },
+  { device: 'MacBook', period: 'Cada 6 meses',  desc: 'Limpieza de ventiladores y pasta térmica.' },
+  { device: 'iMac',    period: 'Cada 12 meses', desc: 'Limpieza interna y revisión de componentes.' },
+  { device: 'iPad',    period: 'Cada 12 meses', desc: 'Revisión de batería y actualización de software.' },
 ];
 
 export default function MaintenancePage() {
-  const [form, setForm] = useState({ name: '', phone: '', device: '', plan: '' });
-  const [sent, setSent] = useState(false);
+  const [form, setForm]       = useState({ name: '', email: '', phone: '', device: '', plan: '' });
+  const [sent, setSent]       = useState(false);
   const [loading, setLoading] = useState(false);
+  const [error, setError]     = useState('');
 
-  const plansRef = useRef<HTMLElement>(null);
-  const includedRef = useRef<HTMLElement>(null);
+  const plansRef     = useRef<HTMLElement>(null);
+  const includedRef  = useRef<HTMLElement>(null);
   const frequencyRef = useRef<HTMLElement>(null);
-  const contactRef = useRef<HTMLElement>(null);
+  const contactRef   = useRef<HTMLElement>(null);
 
-  const plansVisible = useRevealOnScroll(plansRef);
-  const includedVisible = useRevealOnScroll(includedRef);
+  const plansVisible     = useRevealOnScroll(plansRef);
+  const includedVisible  = useRevealOnScroll(includedRef);
   const frequencyVisible = useRevealOnScroll(frequencyRef);
-  const contactVisible = useRevealOnScroll(contactRef);
+  const contactVisible   = useRevealOnScroll(contactRef);
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
-  ) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) =>
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
-  };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    setTimeout(() => {
-      setLoading(false);
+    setError('');
+    try {
+      await fetch(`${process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:8080'}/api/mail/send`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ to: form.email, name: form.name, type: 'MAINTENANCE', device: form.device, plan: form.plan }),
+      });
       setSent(true);
-    }, 1000);
+    } catch {
+      setError('No se pudo enviar la solicitud. Inténtalo de nuevo.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
     <div className={styles.page}>
-      {/* Hero */}
+
       <section className={`${styles.hero} ${styles.pageEnter}`}>
-        <span className={styles.badge}>Mantenimiento Preventivo Apple</span>
-        <h1 className={styles.heroTitle}>
-          Mantén tu dispositivo <span>siempre a punto</span>
-        </h1>
-        <p className={styles.heroSubtitle}>
-          El mantenimiento regular prolonga la vida útil de tu dispositivo Apple,
-          mejora su rendimiento y previene averías costosas.
-        </p>
-        <a href="#contacto" className={styles.heroCta}>
-          Reservar mantenimiento
-        </a>
+        <p className={styles.eyebrow}>Mantenimiento Preventivo Apple</p>
+        <h1 className={styles.heroTitle}>Cuida tu dispositivo<br />antes de que falle.</h1>
+        <p className={styles.heroLead}>El mantenimiento regular prolonga la vida útil, mejora el rendimiento y previene averías costosas.</p>
+        <p className={styles.heroPrice}>Desde 29 € <span>· Incluye diagnóstico y copia de seguridad</span></p>
       </section>
 
-      {/* Plans */}
       <section
         ref={plansRef}
         className={`${styles.plansSection} ${styles.reveal} ${plansVisible ? styles.revealVisible : ''}`}
       >
-        <div className={styles.sectionInner}>
-          <h2 className={styles.sectionTitle}>Planes de mantenimiento</h2>
-          <p className={styles.sectionSubtitle}>Elige el plan que mejor se adapta a tus necesidades</p>
-          <div className={styles.plansGrid}>
+        <div className={styles.inner}>
+          <p className={styles.sectionEyebrow}>Planes</p>
+          <div className={styles.plansList}>
             {PLANS.map((plan) => (
-              <div key={plan.name} className={`${styles.planCard} ${plan.featured ? styles.featured : ''}`}>
-                {plan.featured && <span className={styles.featuredBadge}>Más popular</span>}
-                <span className={styles.planIcon}>{plan.icon}</span>
-                <p className={styles.planName}>{plan.name}</p>
-                <p className={styles.planPrice}>{plan.price} € <span>/ sesión</span></p>
+              <div key={plan.name} className={styles.planRow}>
+                <div className={styles.planHeader}>
+                  <p className={styles.planName}>{plan.name}</p>
+                  <p className={styles.planPrice}>{plan.price} <span>€ / sesión</span></p>
+                </div>
                 <ul className={styles.planFeatures}>
                   {plan.features.map((f) => <li key={f}>{f}</li>)}
                 </ul>
@@ -177,17 +125,15 @@ export default function MaintenancePage() {
         </div>
       </section>
 
-      {/* What's included */}
       <section
         ref={includedRef}
         className={`${styles.includedSection} ${styles.reveal} ${includedVisible ? styles.revealVisible : ''}`}
       >
-        <div className={styles.sectionInner}>
-          <h2 className={styles.sectionTitle}>¿Qué incluye el mantenimiento?</h2>
-          <div className={styles.includedGrid}>
+        <div className={styles.inner}>
+          <p className={styles.sectionEyebrow}>Qué incluye</p>
+          <div className={styles.includedList}>
             {INCLUDED.map((item) => (
-              <div key={item.name} className={styles.includedCard}>
-                <span className={styles.includedIcon}>{item.icon}</span>
+              <div key={item.name} className={styles.includedRow}>
                 <p className={styles.includedName}>{item.name}</p>
                 <p className={styles.includedDesc}>{item.desc}</p>
               </div>
@@ -196,18 +142,15 @@ export default function MaintenancePage() {
         </div>
       </section>
 
-      {/* Frequency */}
       <section
         ref={frequencyRef}
         className={`${styles.frequencySection} ${styles.reveal} ${frequencyVisible ? styles.revealVisible : ''}`}
       >
-        <div className={styles.sectionInner}>
-          <h2 className={styles.sectionTitle}>¿Cada cuánto tiempo?</h2>
-          <p className={styles.sectionSubtitle}>Frecuencia recomendada por dispositivo</p>
-          <div className={styles.frequencyGrid}>
+        <div className={styles.inner}>
+          <p className={styles.sectionEyebrow}>Frecuencia recomendada</p>
+          <div className={styles.frequencyList}>
             {FREQUENCY.map((f) => (
-              <div key={f.device} className={styles.frequencyCard}>
-                <span className={styles.frequencyIcon}>{f.icon}</span>
+              <div key={f.device} className={styles.frequencyRow}>
                 <p className={styles.frequencyDevice}>{f.device}</p>
                 <p className={styles.frequencyPeriod}>{f.period}</p>
                 <p className={styles.frequencyDesc}>{f.desc}</p>
@@ -217,98 +160,77 @@ export default function MaintenancePage() {
         </div>
       </section>
 
-      {/* Contact */}
       <section
         ref={contactRef}
         id="contacto"
         className={`${styles.contactSection} ${styles.reveal} ${contactVisible ? styles.revealVisible : ''}`}
       >
-        <h2 className={styles.contactTitle}>Reserva tu mantenimiento</h2>
-        <p className={styles.contactSubtitle}>
-          Te confirmamos cita en menos de 24 horas.
-        </p>
+        <div className={styles.contactInner}>
+          <div className={styles.contactInfo}>
+            <h2 className={styles.contactTitle}>Reserva tu<br />mantenimiento</h2>
+            <p className={styles.contactLead}>Te confirmamos cita en menos de 24 horas.</p>
+            <div className={styles.infoBlock}>
+              <p className={styles.infoLabel}>Dónde estamos</p>
+              <p className={styles.infoValue}>Calle Gran Vía 42, Madrid</p>
+            </div>
+            <div className={styles.infoBlock}>
+              <p className={styles.infoLabel}>Teléfono</p>
+              <p className={styles.infoValue}><a href="tel:+34912345678">+34 912 345 678</a></p>
+            </div>
+            <div className={styles.infoBlock}>
+              <p className={styles.infoLabel}>Email</p>
+              <p className={styles.infoValue}><a href="mailto:mantenimiento@ivion.es">mantenimiento@ivion.es</a></p>
+            </div>
+          </div>
 
-        {sent ? (
-          <p className={styles.successMsg}>
-            ¡Reserva recibida! Nos pondremos en contacto contigo pronto.
-          </p>
-        ) : (
-          <form className={styles.form} onSubmit={handleSubmit}>
-            <div className={styles.row}>
-              <div className={styles.field}>
-                <label className={styles.label}>Nombre</label>
-                <input
-                  name="name"
-                  type="text"
-                  className={styles.input}
-                  placeholder="Mario García"
-                  value={form.name}
-                  onChange={handleChange}
-                  required
-                />
+          <div className={styles.formCol}>
+            {sent ? (
+              <div className={styles.successBox}>
+                <p className={styles.successTitle}>Reserva recibida.</p>
+                <p className={styles.successText}>Nos pondremos en contacto contigo pronto para confirmar tu cita.</p>
               </div>
-              <div className={styles.field}>
-                <label className={styles.label}>Teléfono</label>
-                <input
-                  name="phone"
-                  type="tel"
-                  className={styles.input}
-                  placeholder="600 000 000"
-                  value={form.phone}
-                  onChange={handleChange}
-                  required
-                />
-              </div>
-            </div>
-
-            <div className={styles.field}>
-              <label className={styles.label}>Dispositivo</label>
-              <select
-                name="device"
-                className={styles.select}
-                value={form.device}
-                onChange={handleChange}
-                required
-              >
-                <option value="">Selecciona tu dispositivo</option>
-                {FREQUENCY.map((f) => (
-                  <option key={f.device} value={f.device}>{f.device}</option>
-                ))}
-              </select>
-            </div>
-
-            <div className={styles.field}>
-              <label className={styles.label}>Plan</label>
-              <select
-                name="plan"
-                className={styles.select}
-                value={form.plan}
-                onChange={handleChange}
-                required
-              >
-                <option value="">Selecciona un plan</option>
-                {PLANS.map((p) => (
-                  <option key={p.name} value={p.name}>{p.name} — {p.price} €</option>
-                ))}
-              </select>
-            </div>
-
-            <button type="submit" className={styles.submit} disabled={loading}>
-              {loading ? 'Enviando...' : 'Reservar cita'}
-            </button>
-          </form>
-        )}
-
-        <div className={styles.contactInfo}>
-          <span className={styles.contactItem}>📍 Calle Gran Vía 42, Madrid</span>
-          <span className={styles.contactItem}>
-            📞 <a href="tel:+34912345678">+34 912 345 678</a>
-          </span>
-          <span className={styles.contactItem}>
-            ✉️ <a href="mailto:mantenimiento@ivion.es">mantenimiento@ivion.es</a>
-          </span>
+            ) : (
+              <form className={styles.form} onSubmit={handleSubmit}>
+                <div className={styles.row}>
+                  <div className={styles.field}>
+                    <label className={styles.label}>Nombre</label>
+                    <input name="name" type="text" className={styles.input} placeholder="Mario García" value={form.name} onChange={handleChange} required />
+                  </div>
+                  <div className={styles.field}>
+                    <label className={styles.label}>Teléfono</label>
+                    <input name="phone" type="tel" className={styles.input} placeholder="600 000 000" value={form.phone} onChange={handleChange} required />
+                  </div>
+                </div>
+                <div className={styles.field}>
+                  <label className={styles.label}>Email</label>
+                  <input name="email" type="email" className={styles.input} placeholder="mario@ejemplo.com" value={form.email} onChange={handleChange} required />
+                </div>
+                <div className={styles.row}>
+                  <div className={styles.field}>
+                    <label className={styles.label}>Dispositivo</label>
+                    <select name="device" className={styles.select} value={form.device} onChange={handleChange} required>
+                      <option value="">Selecciona dispositivo</option>
+                      {FREQUENCY.map((f) => <option key={f.device} value={f.device}>{f.device}</option>)}
+                    </select>
+                  </div>
+                  <div className={styles.field}>
+                    <label className={styles.label}>Plan</label>
+                    <select name="plan" className={styles.select} value={form.plan} onChange={handleChange} required>
+                      <option value="">Selecciona un plan</option>
+                      {PLANS.map((p) => <option key={p.name} value={p.name}>{p.name} — {p.price} €</option>)}
+                    </select>
+                  </div>
+                </div>
+                {error && <p className={styles.errorMsg}>{error}</p>}
+                <button type="submit" className={styles.submit} disabled={loading}>
+                  {loading ? 'Enviando...' : 'Reservar cita'}
+                </button>
+              </form>
+            )}
+          </div>
         </div>
       </section>
+
     </div>
   );
 }

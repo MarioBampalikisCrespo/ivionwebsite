@@ -11,10 +11,10 @@ const STORE_IMAGES = [
 ];
 
 const VALUES = [
-  { icon: '🎯', title: 'Autenticidad', text: 'Solo vendemos productos 100% originales Apple, adquiridos a través de canales oficiales y verificados.' },
-  { icon: '🤝', title: 'Confianza', text: 'Más de una década acompañando a nuestros clientes con honestidad, transparencia y un servicio sin letra pequeña.' },
-  { icon: '🔧', title: 'Excelencia técnica', text: 'Nuestro equipo de técnicos certificados Apple garantiza que cada reparación o consulta se resuelve con el máximo rigor.' },
-  { icon: '❤️', title: 'Pasión', text: 'Somos usuarios Apple antes que vendedores. Esa pasión es la que nos empuja a ofrecer siempre lo mejor.' },
+  { num: '01', title: 'Autenticidad', text: 'Solo vendemos productos 100% originales Apple, adquiridos a través de canales oficiales y verificados.' },
+  { num: '02', title: 'Confianza', text: 'Más de una década acompañando a nuestros clientes con honestidad, transparencia y un servicio sin letra pequeña.' },
+  { num: '03', title: 'Excelencia técnica', text: 'Nuestro equipo de técnicos certificados Apple garantiza que cada reparación o consulta se resuelve con el máximo rigor.' },
+  { num: '04', title: 'Pasión', text: 'Somos usuarios Apple antes que vendedores. Esa pasión es la que nos empuja a ofrecer siempre lo mejor.' },
 ];
 
 export default function AboutPage() {
@@ -22,47 +22,43 @@ export default function AboutPage() {
   const prev = () => setSlideIndex((i) => (i - 1 + STORE_IMAGES.length) % STORE_IMAGES.length);
   const next = () => setSlideIndex((i) => (i + 1) % STORE_IMAGES.length);
 
-  const badgeRef = useRef<HTMLElement>(null);
+  const storyRef  = useRef<HTMLElement>(null);
   const valuesRef = useRef<HTMLElement>(null);
-  const teamRef = useRef<HTMLElement>(null);
+  const teamRef   = useRef<HTMLElement>(null);
 
-  const badgeVisible = useRevealOnScroll(badgeRef);
+  const storyVisible  = useRevealOnScroll(storyRef);
   const valuesVisible = useRevealOnScroll(valuesRef);
-  const teamVisible = useRevealOnScroll(teamRef);
+  const teamVisible   = useRevealOnScroll(teamRef);
 
   return (
     <div className={styles.page}>
-      {/* Hero */}
+
       <section className={`${styles.hero} ${styles.pageEnter}`}>
-        <span className={styles.badge}>Sobre Nosotros</span>
-        <h1 className={styles.heroTitle}>
-          La tienda Apple que<br /><span>nació de la pasión</span>
-        </h1>
-        <p className={styles.heroSubtitle}>
-          Somos iVion, tu Apple Premium Reseller de confianza. Llevamos más de una década
-          acercando la tecnología Apple a las personas con honestidad, pasión y un servicio
-          que va más allá de la venta.
+        <p className={styles.eyebrow}>Apple Premium Reseller · Madrid, 2012</p>
+        <h1 className={styles.heroTitle}>Tu tienda Apple en Madrid desde 2012.</h1>
+        <p className={styles.heroLead}>
+          Llevamos más de una década acercando la tecnología Apple a las personas
+          con honestidad, pasión y un servicio que va más allá de la venta.
         </p>
       </section>
 
-      {/* Badge story */}
       <section
-        ref={badgeRef}
-        className={`${styles.badgeSection} ${styles.reveal} ${badgeVisible ? styles.revealVisible : ''}`}
+        ref={storyRef}
+        className={`${styles.storySection} ${styles.reveal} ${storyVisible ? styles.revealVisible : ''}`}
       >
-        <div className={styles.badgeInner}>
-          <div className={styles.badgeImageCol}>
+        <div className={styles.storyInner}>
+          <div className={styles.storyImageCol}>
             <Image
               src="/ivionshirt.png"
               alt="Empleado iVion"
               width={320}
               height={420}
-              className={styles.badgeImg}
+              className={styles.storyImg}
             />
           </div>
-          <div className={styles.badgeTextCol}>
-            <h2 className={styles.badgeTitle}>El porqué del badge de "Premium Reseller"</h2>
-            <div className={styles.storyText}>
+          <div className={styles.storyTextCol}>
+            <h2 className={styles.storyTitle}>El porqué del badge de "Premium Reseller"</h2>
+            <div className={styles.storyBody}>
               <p>
                 Todo empezó en 2012, cuando Mario Bampalikis abrió un pequeño local en Madrid con
                 una idea clara: vender productos Apple como a él le hubiera gustado que se los
@@ -101,32 +97,31 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* Values */}
       <section
         ref={valuesRef}
         className={`${styles.valuesSection} ${styles.reveal} ${valuesVisible ? styles.revealVisible : ''}`}
       >
-        <div className={styles.sectionInner}>
-          <h2 className={styles.sectionTitle}>Lo que nos define</h2>
-          <div className={styles.valuesGrid}>
+        <div className={styles.valuesInner}>
+          <h2 className={styles.valuesTitle}>Lo que nos define</h2>
+          <div className={styles.valuesList}>
             {VALUES.map((v) => (
-              <div key={v.title} className={styles.valueCard}>
-                <span className={styles.valueIcon}>{v.icon}</span>
-                <p className={styles.valueTitle}>{v.title}</p>
-                <p className={styles.valueText}>{v.text}</p>
+              <div key={v.num} className={styles.valueRow}>
+                <span className={styles.valueNum}>{v.num}</span>
+                <div className={styles.valueMeta}>
+                  <p className={styles.valueTitle}>{v.title}</p>
+                  <p className={styles.valueText}>{v.text}</p>
+                </div>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Team / closing */}
       <section
         ref={teamRef}
         className={`${styles.teamSection} ${styles.reveal} ${teamVisible ? styles.revealVisible : ''}`}
       >
         <div className={styles.teamInner}>
-          <h2 className={styles.teamTitle}>Más que una tienda</h2>
           <div className={styles.sliderWrapper}>
             <div className={styles.storeImageWrapper}>
               {STORE_IMAGES.map((img, i) => (
@@ -152,17 +147,17 @@ export default function AboutPage() {
               ))}
             </div>
           </div>
-          <p className={styles.teamText}>
-            Detrás de iVion hay un equipo pequeño pero muy comprometido. Técnicos certificados,
-            asesores con años de experiencia y personas que genuinamente disfrutan ayudando a
-            otros a sacar el máximo partido a su tecnología. Si alguna vez has entrado por nuestra
-            puerta con un problema y has salido con una sonrisa, sabes de lo que hablamos.
-          </p>
-          <p className={styles.teamText}>
-            Gracias por confiar en nosotros. Este badge también es tuyo.
-          </p>
+          <div className={styles.teamText}>
+            <p>
+              Detrás de iVion hay un equipo pequeño pero muy comprometido. Técnicos certificados,
+              asesores con años de experiencia y personas que genuinamente disfrutan ayudando a
+              otros a sacar el máximo partido a su tecnología.
+            </p>
+            <p>Gracias por confiar en nosotros. Este badge también es tuyo.</p>
+          </div>
         </div>
       </section>
+
     </div>
   );
 }

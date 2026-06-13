@@ -8,6 +8,15 @@ export interface ColourDTO {
   colourName: string;
 }
 
+export interface ProductVariantDTO {
+  id: number;
+  chip: string | null;
+  screenSize: string | null;
+  storage: string;
+  memory: string;
+  price: number;
+}
+
 export interface ProductDTO {
   id: number;
   productName: string;
@@ -18,6 +27,7 @@ export interface ProductDTO {
   productPrice: number;
   category: CategoryDTO | null;
   colour: ColourDTO | null;
+  variants: ProductVariantDTO[];
 }
 
 export interface UserDTO {
@@ -30,6 +40,7 @@ export interface UserDTO {
 export interface CartItemDTO {
   product: ProductDTO;
   quantity: number;
+  variantId: number | null;
 }
 
 export interface CartDTO {

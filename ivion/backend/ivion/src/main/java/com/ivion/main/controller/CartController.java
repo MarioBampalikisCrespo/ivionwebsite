@@ -23,8 +23,9 @@ public class CartController {
     @PostMapping("/user/{userId}/add/{productId}")
     public CartDTO addProduct(@PathVariable Integer userId,
                               @PathVariable Integer productId,
-                              @RequestParam(defaultValue = "1") int quantity) {
-        return cartService.addProduct(userId, productId, quantity);
+                              @RequestParam(defaultValue = "1") int quantity,
+                              @RequestParam(required = false) Integer variantId) {
+        return cartService.addProduct(userId, productId, quantity, variantId);
     }
 
     @DeleteMapping("/user/{userId}/remove/{productId}")
