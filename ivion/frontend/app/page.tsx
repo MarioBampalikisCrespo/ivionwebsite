@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef } from 'react';
+import { useRef, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import gsap from 'gsap';
@@ -56,7 +56,7 @@ function FeatureCard({ image, title, text, cta, href, reverse }: typeof FEATURES
         opacity: 0,
         duration: 0.75,
         ease: 'power2.out',
-        scrollTrigger: { trigger: cardRef.current, start: 'top 82%' },
+        scrollTrigger: { trigger: cardRef.current, start: 'top 82%', once: true },
       });
       gsap.from(textRef.current, {
         x: reverse ? -60 : 60,
@@ -64,7 +64,7 @@ function FeatureCard({ image, title, text, cta, href, reverse }: typeof FEATURES
         duration: 0.75,
         ease: 'power2.out',
         delay: 0.12,
-        scrollTrigger: { trigger: cardRef.current, start: 'top 82%' },
+        scrollTrigger: { trigger: cardRef.current, start: 'top 82%', once: true },
       });
     });
   }, { scope: cardRef });
@@ -108,9 +108,10 @@ export default function Home() {
         duration: 0.5,
         stagger: 0.1,
         ease: 'power2.out',
-        scrollTrigger: { trigger: categoriesGridRef.current, start: 'top 80%' },
+        scrollTrigger: { trigger: categoriesGridRef.current, start: 'top 80%', once: true },
       });
     });
+    ScrollTrigger.refresh();
   }, { scope: categoriesGridRef });
 
   return (
