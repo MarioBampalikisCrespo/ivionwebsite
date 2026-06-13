@@ -35,3 +35,6 @@ build/
 ### Eclipse bin ###
 bin/
 
+### Gradle cache ###
+.gradle/
+
