@@ -2,50 +2,53 @@
 
 import { createContext, useCallback, useContext, useEffect, useState } from 'react';
 import { UserDTO } from '../lib/types';
+import { api } from '../lib/api';
 
 interface AuthState {
-  token: string | null;
   user: UserDTO | null;
+  initializing: boolean;
 }
 
-interface AuthContextValue extends AuthState {
-  login: (token: string, user: UserDTO) => void;
-  logout: () => void;
+interface AuthContextValue {
+  user: UserDTO | null;
   isAuthenticated: boolean;
+  initializing: boolean;
+  login: (user: UserDTO) => void;
+  logout: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextValue | null>(null);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [state, setState] = useState<AuthState>({ token: null, user: null });
+  const [state, setState] = useState<AuthState>({ user: null, initializing: true });
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
-    const userRaw = localStorage.getItem('user');
-    if (token && userRaw) {
-      try {
-        setState({ token, user: JSON.parse(userRaw) });
-      } catch {
-        localStorage.removeItem('token');
-        localStorage.removeItem('user');
-      }
+    api.get<UserDTO>('/api/auth/me')
+      .then(user => setState({ user, initializing: false }))
+      .catch(() => setState({ user: null, initializing: false }));
+  }, []);
+
+  const login = useCallback((user: UserDTO) => {
+    setState({ user, initializing: false });
+  }, []);
+
+  const logout = useCallback(async () => {
+    try {
+      await api.post('/api/auth/logout', null);
+    } catch {
+      // best-effort
     }
-  }, []);
-
-  const login = useCallback((token: string, user: UserDTO) => {
-    localStorage.setItem('token', token);
-    localStorage.setItem('user', JSON.stringify(user));
-    setState({ token, user });
-  }, []);
-
-  const logout = useCallback(() => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
-    setState({ token: null, user: null });
+    setState({ user: null, initializing: false });
   }, []);
 
   return (
-    <AuthContext.Provider value={{ ...state, login, logout, isAuthenticated: !!state.token }}>
+    <AuthContext.Provider value={{
+      user: state.user,
+      isAuthenticated: !!state.user,
+      initializing: state.initializing,
+      login,
+      logout,
+    }}>
       {children}
     </AuthContext.Provider>
   );

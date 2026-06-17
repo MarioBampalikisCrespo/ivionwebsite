@@ -32,11 +32,31 @@ const REPORT_ITEMS = [
 
 const DEVICES = ['iPhone', 'MacBook', 'iPad', 'Apple Watch', 'AirPods', 'iMac'];
 
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const PHONE_RE = /^[+]?[\d\s\-(). ]{9,15}$/;
+const NAME_RE  = /^[^<>'";&|]{2,80}$/;
+
+type Field = 'name' | 'phone' | 'email' | 'device';
+type FormState = { name: string; email: string; phone: string; device: string; notes: string };
+
+function validate(form: FormState) {
+  const e: Partial<Record<Field, string>> = {};
+  if (!form.name.trim())              e.name   = "El nombre es obligatorio";
+  else if (!NAME_RE.test(form.name))  e.name   = "El nombre no puede contener caracteres especiales";
+  if (!form.phone.trim())             e.phone  = "El teléfono es obligatorio";
+  else if (!PHONE_RE.test(form.phone))e.phone  = "Introduce un número válido (ej: 600 000 000)";
+  if (!form.email.trim())             e.email  = "El email es obligatorio";
+  else if (!EMAIL_RE.test(form.email))e.email  = "Introduce un email válido (ej: mario@ejemplo.com)";
+  if (!form.device)                   e.device = "Selecciona un dispositivo";
+  return e;
+}
+
 export default function DiagnosticPage() {
-  const [form, setForm]       = useState({ name: '', email: '', phone: '', device: '', notes: '' });
+  const [form, setForm]       = useState<FormState>({ name: '', email: '', phone: '', device: '', notes: '' });
+  const [touched, setTouched] = useState<Partial<Record<Field, boolean>>>({});
   const [sent, setSent]       = useState(false);
   const [loading, setLoading] = useState(false);
-  const [error, setError]     = useState('');
+  const [apiError, setApiError] = useState('');
 
   const stepsRef   = useRef<HTMLElement>(null);
   const checksRef  = useRef<HTMLElement>(null);
@@ -48,13 +68,20 @@ export default function DiagnosticPage() {
   const reportVisible  = useRevealOnScroll(reportRef);
   const contactVisible = useRevealOnScroll(contactRef);
 
+  const errors = validate(form);
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) =>
-    setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+    setForm(prev => ({ ...prev, [e.target.name]: e.target.value }));
+
+  const handleBlur = (field: Field) =>
+    setTouched(prev => ({ ...prev, [field]: true }));
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setTouched({ name: true, phone: true, email: true, device: true });
+    if (Object.keys(errors).length > 0) return;
     setLoading(true);
-    setError('');
+    setApiError('');
     try {
       await fetch(`${process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:8080'}/api/mail/send`, {
         method: 'POST',
@@ -63,11 +90,17 @@ export default function DiagnosticPage() {
       });
       setSent(true);
     } catch {
-      setError('No se pudo enviar la solicitud. Inténtalo de nuevo.');
+      setApiError('No se pudo enviar la solicitud. Inténtalo de nuevo.');
     } finally {
       setLoading(false);
     }
   };
+
+  const err = (f: Field) => touched[f] && errors[f]
+    ? <div className={styles.fieldError}>{errors[f]}</div> : null;
+
+  const inputCls  = (f: Field) => `${styles.input}${touched[f] && errors[f] ? ` ${styles.inputError}` : ''}`;
+  const selectCls = (f: Field) => `${styles.select}${touched[f] && errors[f] ? ` ${styles.inputError}` : ''}`;
 
   return (
     <div className={styles.page}>
@@ -163,33 +196,43 @@ export default function DiagnosticPage() {
                 <p className={styles.successText}>Te contactamos pronto para confirmar tu cita de diagnóstico.</p>
               </div>
             ) : (
-              <form className={styles.form} onSubmit={handleSubmit}>
+              <form className={styles.form} onSubmit={handleSubmit} noValidate>
                 <div className={styles.row}>
                   <div className={styles.field}>
                     <label className={styles.label}>Nombre</label>
-                    <input name="name" type="text" className={styles.input} placeholder="Mario García" value={form.name} onChange={handleChange} required />
+                    <input name="name" type="text" className={inputCls('name')} placeholder="Mario García"
+                      value={form.name} onChange={handleChange} onBlur={() => handleBlur('name')} />
+                    {err('name')}
                   </div>
                   <div className={styles.field}>
                     <label className={styles.label}>Teléfono</label>
-                    <input name="phone" type="tel" className={styles.input} placeholder="600 000 000" value={form.phone} onChange={handleChange} required />
+                    <input name="phone" type="tel" className={inputCls('phone')} placeholder="600 000 000"
+                      value={form.phone} onChange={handleChange} onBlur={() => handleBlur('phone')} />
+                    {err('phone')}
                   </div>
                 </div>
                 <div className={styles.field}>
                   <label className={styles.label}>Email</label>
-                  <input name="email" type="email" className={styles.input} placeholder="mario@ejemplo.com" value={form.email} onChange={handleChange} required />
+                  <input name="email" type="email" className={inputCls('email')} placeholder="mario@ejemplo.com"
+                    value={form.email} onChange={handleChange} onBlur={() => handleBlur('email')} />
+                  {err('email')}
                 </div>
                 <div className={styles.field}>
                   <label className={styles.label}>Dispositivo</label>
-                  <select name="device" className={styles.select} value={form.device} onChange={handleChange} required>
+                  <select name="device" className={selectCls('device')} value={form.device}
+                    onChange={handleChange} onBlur={() => handleBlur('device')}>
                     <option value="">Selecciona tu dispositivo</option>
                     {DEVICES.map((d) => <option key={d} value={d}>{d}</option>)}
                   </select>
+                  {err('device')}
                 </div>
                 <div className={styles.field}>
                   <label className={styles.label}>¿Qué síntomas tiene? (opcional)</label>
-                  <textarea name="notes" className={styles.textarea} placeholder="Ej: se apaga solo, va lento, no carga..." value={form.notes} onChange={handleChange} />
+                  <textarea name="notes" className={styles.textarea}
+                    placeholder="Ej: se apaga solo, va lento, no carga..."
+                    value={form.notes} onChange={handleChange} />
                 </div>
-                {error && <p className={styles.errorMsg}>{error}</p>}
+                {apiError && <p className={styles.errorMsg}>{apiError}</p>}
                 <button type="submit" className={styles.submit} disabled={loading}>
                   {loading ? 'Enviando...' : 'Solicitar diagnóstico gratuito'}
                 </button>

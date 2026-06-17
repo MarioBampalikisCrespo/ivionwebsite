@@ -55,11 +55,32 @@ const FREQUENCY = [
   { device: 'iPad',    period: 'Cada 12 meses', desc: 'Revisión de batería y actualización de software.' },
 ];
 
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const PHONE_RE = /^[+]?[\d\s\-(). ]{9,15}$/;
+const NAME_RE  = /^[^<>'";&|]{2,80}$/;
+
+type Field = 'name' | 'phone' | 'email' | 'device' | 'plan';
+type FormState = { name: string; email: string; phone: string; device: string; plan: string };
+
+function validate(form: FormState) {
+  const e: Partial<Record<Field, string>> = {};
+  if (!form.name.trim())              e.name   = "El nombre es obligatorio";
+  else if (!NAME_RE.test(form.name))  e.name   = "El nombre no puede contener caracteres especiales";
+  if (!form.phone.trim())             e.phone  = "El teléfono es obligatorio";
+  else if (!PHONE_RE.test(form.phone))e.phone  = "Introduce un número válido (ej: 600 000 000)";
+  if (!form.email.trim())             e.email  = "El email es obligatorio";
+  else if (!EMAIL_RE.test(form.email))e.email  = "Introduce un email válido (ej: mario@ejemplo.com)";
+  if (!form.device)                   e.device = "Selecciona un dispositivo";
+  if (!form.plan)                     e.plan   = "Selecciona un plan";
+  return e;
+}
+
 export default function MaintenancePage() {
-  const [form, setForm]       = useState({ name: '', email: '', phone: '', device: '', plan: '' });
+  const [form, setForm]       = useState<FormState>({ name: '', email: '', phone: '', device: '', plan: '' });
+  const [touched, setTouched] = useState<Partial<Record<Field, boolean>>>({});
   const [sent, setSent]       = useState(false);
   const [loading, setLoading] = useState(false);
-  const [error, setError]     = useState('');
+  const [apiError, setApiError] = useState('');
 
   const plansRef     = useRef<HTMLElement>(null);
   const includedRef  = useRef<HTMLElement>(null);
@@ -71,13 +92,20 @@ export default function MaintenancePage() {
   const frequencyVisible = useRevealOnScroll(frequencyRef);
   const contactVisible   = useRevealOnScroll(contactRef);
 
+  const errors = validate(form);
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) =>
-    setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+    setForm(prev => ({ ...prev, [e.target.name]: e.target.value }));
+
+  const handleBlur = (field: Field) =>
+    setTouched(prev => ({ ...prev, [field]: true }));
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setTouched({ name: true, phone: true, email: true, device: true, plan: true });
+    if (Object.keys(errors).length > 0) return;
     setLoading(true);
-    setError('');
+    setApiError('');
     try {
       await fetch(`${process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:8080'}/api/mail/send`, {
         method: 'POST',
@@ -86,11 +114,17 @@ export default function MaintenancePage() {
       });
       setSent(true);
     } catch {
-      setError('No se pudo enviar la solicitud. Inténtalo de nuevo.');
+      setApiError('No se pudo enviar la solicitud. Inténtalo de nuevo.');
     } finally {
       setLoading(false);
     }
   };
+
+  const err = (f: Field) => touched[f] && errors[f]
+    ? <div className={styles.fieldError}>{errors[f]}</div> : null;
+
+  const inputCls  = (f: Field) => `${styles.input}${touched[f] && errors[f] ? ` ${styles.inputError}` : ''}`;
+  const selectCls = (f: Field) => `${styles.select}${touched[f] && errors[f] ? ` ${styles.inputError}` : ''}`;
 
   return (
     <div className={styles.page}>
@@ -190,38 +224,48 @@ export default function MaintenancePage() {
                 <p className={styles.successText}>Nos pondremos en contacto contigo pronto para confirmar tu cita.</p>
               </div>
             ) : (
-              <form className={styles.form} onSubmit={handleSubmit}>
+              <form className={styles.form} onSubmit={handleSubmit} noValidate>
                 <div className={styles.row}>
                   <div className={styles.field}>
                     <label className={styles.label}>Nombre</label>
-                    <input name="name" type="text" className={styles.input} placeholder="Mario García" value={form.name} onChange={handleChange} required />
+                    <input name="name" type="text" className={inputCls('name')} placeholder="Mario García"
+                      value={form.name} onChange={handleChange} onBlur={() => handleBlur('name')} />
+                    {err('name')}
                   </div>
                   <div className={styles.field}>
                     <label className={styles.label}>Teléfono</label>
-                    <input name="phone" type="tel" className={styles.input} placeholder="600 000 000" value={form.phone} onChange={handleChange} required />
+                    <input name="phone" type="tel" className={inputCls('phone')} placeholder="600 000 000"
+                      value={form.phone} onChange={handleChange} onBlur={() => handleBlur('phone')} />
+                    {err('phone')}
                   </div>
                 </div>
                 <div className={styles.field}>
                   <label className={styles.label}>Email</label>
-                  <input name="email" type="email" className={styles.input} placeholder="mario@ejemplo.com" value={form.email} onChange={handleChange} required />
+                  <input name="email" type="email" className={inputCls('email')} placeholder="mario@ejemplo.com"
+                    value={form.email} onChange={handleChange} onBlur={() => handleBlur('email')} />
+                  {err('email')}
                 </div>
                 <div className={styles.row}>
                   <div className={styles.field}>
                     <label className={styles.label}>Dispositivo</label>
-                    <select name="device" className={styles.select} value={form.device} onChange={handleChange} required>
+                    <select name="device" className={selectCls('device')} value={form.device}
+                      onChange={handleChange} onBlur={() => handleBlur('device')}>
                       <option value="">Selecciona dispositivo</option>
                       {FREQUENCY.map((f) => <option key={f.device} value={f.device}>{f.device}</option>)}
                     </select>
+                    {err('device')}
                   </div>
                   <div className={styles.field}>
                     <label className={styles.label}>Plan</label>
-                    <select name="plan" className={styles.select} value={form.plan} onChange={handleChange} required>
+                    <select name="plan" className={selectCls('plan')} value={form.plan}
+                      onChange={handleChange} onBlur={() => handleBlur('plan')}>
                       <option value="">Selecciona un plan</option>
                       {PLANS.map((p) => <option key={p.name} value={p.name}>{p.name} — {p.price} €</option>)}
                     </select>
+                    {err('plan')}
                   </div>
                 </div>
-                {error && <p className={styles.errorMsg}>{error}</p>}
+                {apiError && <p className={styles.errorMsg}>{apiError}</p>}
                 <button type="submit" className={styles.submit} disabled={loading}>
                   {loading ? 'Enviando...' : 'Reservar cita'}
                 </button>

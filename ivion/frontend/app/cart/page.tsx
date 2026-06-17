@@ -20,6 +20,34 @@ const formatExpiry = (v: string) => {
   return d.length >= 3 ? d.slice(0, 2) + '/' + d.slice(2) : d;
 };
 
+const ADDR_RE   = /^[^<>'";&|]{5,300}$/;
+const NAME_RE   = /^[A-ZÁÉÍÓÚÜÑ ]{2,80}$/;
+const EXPIRY_RE = /^(0[1-9]|1[0-2])\/\d{2}$/;
+const CVV_RE    = /^\d{3,4}$/;
+
+type CardField = 'number' | 'name' | 'expiry' | 'cvv';
+
+function validateCard(card: { number: string; name: string; expiry: string; cvv: string }) {
+  const e: Partial<Record<CardField, string>> = {};
+  if (!card.number.trim())
+    e.number = "Introduce el número de tarjeta";
+  else if (card.number.replace(/\s/g, '').length !== 16)
+    e.number = "El número debe tener 16 dígitos";
+  if (!card.name.trim())
+    e.name = "Introduce el nombre del titular";
+  else if (!NAME_RE.test(card.name))
+    e.name = "Solo letras y espacios (ej: MARIO GARCIA)";
+  if (!card.expiry.trim())
+    e.expiry = "Introduce la fecha de caducidad";
+  else if (!EXPIRY_RE.test(card.expiry))
+    e.expiry = "Formato MM/AA (ej: 08/27)";
+  if (!card.cvv.trim())
+    e.cvv = "Introduce el CVV";
+  else if (!CVV_RE.test(card.cvv))
+    e.cvv = "3 o 4 dígitos";
+  return e;
+}
+
 export default function CartPage() {
   const router = useRouter();
   const { isAuthenticated, user } = useAuth();
@@ -30,9 +58,19 @@ export default function CartPage() {
   const [showModal, setShowModal] = useState(false);
   const [step, setStep] = useState<Step>('address');
   const [address, setAddress] = useState('');
+  const [addrTouched, setAddrTouched] = useState(false);
   const [card, setCard] = useState({ number: '', expiry: '', cvv: '', name: '' });
+  const [cardTouched, setCardTouched] = useState<Partial<Record<CardField, boolean>>>({});
   const [orderError, setOrderError] = useState('');
   const [orderId, setOrderId] = useState<number | null>(null);
+
+  const addrError = addrTouched && !address.trim()
+    ? "La dirección es obligatoria"
+    : addrTouched && !ADDR_RE.test(address)
+    ? "La dirección no puede contener caracteres especiales"
+    : null;
+
+  const cardErrors = validateCard(card);
 
   const loadCart = async (userId: number) => {
     setLoading(true);
@@ -57,6 +95,8 @@ export default function CartPage() {
   const openCheckout = () => {
     setStep('address');
     setOrderError('');
+    setAddrTouched(false);
+    setCardTouched({});
     setShowModal(true);
   };
 
@@ -77,7 +117,15 @@ export default function CartPage() {
     }
   };
 
+  const handleContinueToPayment = () => {
+    setAddrTouched(true);
+    if (!address.trim() || !ADDR_RE.test(address)) return;
+    setStep('payment');
+  };
+
   const handlePayAndOrder = async () => {
+    setCardTouched({ number: true, name: true, expiry: true, cvv: true });
+    if (Object.keys(cardErrors).length > 0) return;
     if (!user) return;
     setStep('processing');
     setOrderError('');
@@ -94,6 +142,15 @@ export default function CartPage() {
       setStep('payment');
     }
   };
+
+  const cardErr = (f: CardField) => cardTouched[f] && cardErrors[f]
+    ? <div className={styles.modalFieldError}>{cardErrors[f]}</div> : null;
+
+  const cardInputCls = (f: CardField) =>
+    `${styles.modalInput}${cardTouched[f] && cardErrors[f] ? ` ${styles.modalInputError}` : ''}`;
+
+  const touchCard = (f: CardField) =>
+    setCardTouched(prev => ({ ...prev, [f]: true }));
 
   if (loading) return <p className={styles.loading}>Cargando carrito...</p>;
 
@@ -188,21 +245,19 @@ export default function CartPage() {
                 <div className={styles.modalField}>
                   <label className={styles.modalLabel}>Dirección</label>
                   <input
-                    className={styles.modalInput}
+                    className={`${styles.modalInput}${addrTouched && addrError ? ` ${styles.modalInputError}` : ''}`}
                     type="text"
                     placeholder="Calle Ejemplo 1, 28001 Madrid"
                     value={address}
                     onChange={e => setAddress(e.target.value)}
+                    onBlur={() => setAddrTouched(true)}
                     autoFocus
                   />
+                  {addrError && <div className={styles.modalFieldError}>{addrError}</div>}
                 </div>
                 <div className={styles.modalActions}>
                   <button className={styles.cancelBtn} onClick={closeModal}>Cancelar</button>
-                  <button
-                    className={styles.confirmBtn}
-                    onClick={() => setStep('payment')}
-                    disabled={!address.trim()}
-                  >
+                  <button className={styles.confirmBtn} onClick={handleContinueToPayment}>
                     Continuar
                   </button>
                 </div>
@@ -231,46 +286,54 @@ export default function CartPage() {
                   <div className={styles.modalField}>
                     <label className={styles.modalLabel}>Número de tarjeta</label>
                     <input
-                      className={styles.modalInput}
+                      className={cardInputCls('number')}
                       type="text"
                       placeholder="1234 5678 9012 3456"
                       value={card.number}
                       onChange={e => setCard(c => ({ ...c, number: formatCardNumber(e.target.value) }))}
+                      onBlur={() => touchCard('number')}
                       inputMode="numeric"
                     />
+                    {cardErr('number')}
                   </div>
                   <div className={styles.modalField}>
                     <label className={styles.modalLabel}>Titular</label>
                     <input
-                      className={styles.modalInput}
+                      className={cardInputCls('name')}
                       type="text"
                       placeholder="NOMBRE APELLIDO"
                       value={card.name}
                       onChange={e => setCard(c => ({ ...c, name: e.target.value.toUpperCase() }))}
+                      onBlur={() => touchCard('name')}
                     />
+                    {cardErr('name')}
                   </div>
                   <div className={styles.payRow}>
                     <div className={styles.modalField}>
                       <label className={styles.modalLabel}>Caducidad</label>
                       <input
-                        className={styles.modalInput}
+                        className={cardInputCls('expiry')}
                         type="text"
                         placeholder="MM/AA"
                         value={card.expiry}
                         onChange={e => setCard(c => ({ ...c, expiry: formatExpiry(e.target.value) }))}
+                        onBlur={() => touchCard('expiry')}
                         inputMode="numeric"
                       />
+                      {cardErr('expiry')}
                     </div>
                     <div className={styles.modalField}>
                       <label className={styles.modalLabel}>CVV</label>
                       <input
-                        className={styles.modalInput}
+                        className={cardInputCls('cvv')}
                         type="password"
                         placeholder="•••"
                         value={card.cvv}
                         onChange={e => setCard(c => ({ ...c, cvv: e.target.value.replace(/\D/g, '').slice(0, 4) }))}
+                        onBlur={() => touchCard('cvv')}
                         inputMode="numeric"
                       />
+                      {cardErr('cvv')}
                     </div>
                   </div>
                 </div>
@@ -284,11 +347,7 @@ export default function CartPage() {
 
                 <div className={styles.modalActions}>
                   <button className={styles.cancelBtn} onClick={() => setStep('address')}>← Volver</button>
-                  <button
-                    className={styles.confirmBtn}
-                    onClick={handlePayAndOrder}
-                    disabled={!card.number || !card.name || !card.expiry || !card.cvv}
-                  >
+                  <button className={styles.confirmBtn} onClick={handlePayAndOrder}>
                     Pagar ahora
                   </button>
                 </div>

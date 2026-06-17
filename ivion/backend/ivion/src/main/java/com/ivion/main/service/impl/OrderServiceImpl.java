@@ -49,6 +49,16 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    @Transactional(readOnly = true)
+    public Optional<OrderDTO> findByIdAndUserId(Integer id, Integer userId) {
+        return orderRepository.findByIdAndUserId(id, userId).map(order -> {
+            List<OrderItemDTO> items = orderProductRepository.findByOrderId(order.getId())
+                    .stream().map(OrderItemDTO::from).collect(Collectors.toList());
+            return OrderDTO.from(order, items);
+        });
+    }
+
+    @Override
     @Transactional
     public OrderDTO createFromCart(Integer userId, String shipmentAddress) {
         User user = userRepository.findById(userId)

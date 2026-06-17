@@ -4,40 +4,92 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { api } from '../../../lib/api';
-import { AuthResponse } from '../../../lib/types';
+import { UserDTO } from '../../../lib/types';
 import { useAuth } from '../../../context/AuthContext';
 import styles from '../auth.module.css';
+
+const EMAIL_RE  = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const NAME_RE   = /^[^<>'";&|]{1,80}$/;
+
+type Field = 'username' | 'userSurnames' | 'email' | 'password';
+
+function validate(form: Record<Field, string>) {
+  const errors: Partial<Record<Field, string>> = {};
+  if (!form.username.trim())
+    errors.username    = "El nombre es obligatorio";
+  else if (!NAME_RE.test(form.username))
+    errors.username    = "El nombre no puede contener caracteres especiales";
+
+  if (form.userSurnames && !NAME_RE.test(form.userSurnames))
+    errors.userSurnames = "Los apellidos no pueden contener caracteres especiales";
+
+  if (!form.email.trim())
+    errors.email       = "El email es obligatorio";
+  else if (!EMAIL_RE.test(form.email))
+    errors.email       = "Introduce un email válido (ej: usuario@dominio.com)";
+
+  if (!form.password)
+    errors.password    = "La contraseña es obligatoria";
+  else if (form.password.length < 6)
+    errors.password    = "La contraseña debe tener al menos 6 caracteres";
+
+  return errors;
+}
 
 export default function RegisterPage() {
   const router = useRouter();
   const { login } = useAuth();
-  const [form, setForm] = useState({
-    username: '',
-    userSurnames: '',
-    email: '',
-    password: '',
+  const [form, setForm] = useState<Record<Field, string>>({
+    username: '', userSurnames: '', email: '', password: '',
   });
-  const [error, setError] = useState('');
-  const [loading, setLoading] = useState(false);
+  const [touched,  setTouched]  = useState<Partial<Record<Field, boolean>>>({});
+  const [apiError, setApiError] = useState('');
+  const [loading,  setLoading]  = useState(false);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
-  };
+  const errors = validate(form);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) =>
+    setForm(prev => ({ ...prev, [e.target.name]: e.target.value }));
+
+  const handleBlur = (field: Field) =>
+    setTouched(prev => ({ ...prev, [field]: true }));
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError('');
+    setTouched({ username: true, userSurnames: true, email: true, password: true });
+    if (Object.keys(errors).length > 0) return;
+    setApiError('');
     setLoading(true);
     try {
-      const res = await api.post<AuthResponse>('/api/auth/register', form);
-      login(res.token, res.user);
+      const user = await api.post<UserDTO>('/api/auth/register', form);
+      login(user);
       router.push('/');
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Error al registrarse');
+      setApiError(err instanceof Error ? err.message : 'Error al registrarse');
     } finally {
       setLoading(false);
     }
   };
+
+  const field = (id: Field, label: string, placeholder: string, type = 'text') => (
+    <div className={styles.field}>
+      <label className={styles.label} htmlFor={id}>{label}</label>
+      <input
+        id={id}
+        name={id}
+        type={type}
+        className={`${styles.input}${touched[id] && errors[id] ? ` ${styles.inputError}` : ''}`}
+        value={form[id]}
+        onChange={handleChange}
+        onBlur={() => handleBlur(id)}
+        placeholder={placeholder}
+        autoComplete={id === 'password' ? 'new-password' : id === 'email' ? 'email' : 'off'}
+      />
+      {touched[id] && errors[id] && (
+        <div className={styles.fieldError}>{errors[id]}</div>
+      )}
+    </div>
+  );
 
   return (
     <div className={styles.page}>
@@ -45,61 +97,13 @@ export default function RegisterPage() {
         <h1 className={styles.title}>Crear Cuenta</h1>
         <p className={styles.subtitle}>Únete a iVion hoy mismo</p>
 
-        <form className={styles.form} onSubmit={handleSubmit}>
-          <div className={styles.field}>
-            <label className={styles.label} htmlFor="username">Nombre</label>
-            <input
-              id="username"
-              name="username"
-              type="text"
-              className={styles.input}
-              value={form.username}
-              onChange={handleChange}
-              placeholder="Mario"
-              required
-            />
-          </div>
-          <div className={styles.field}>
-            <label className={styles.label} htmlFor="userSurnames">Apellidos</label>
-            <input
-              id="userSurnames"
-              name="userSurnames"
-              type="text"
-              className={styles.input}
-              value={form.userSurnames}
-              onChange={handleChange}
-              placeholder="García López"
-            />
-          </div>
-          <div className={styles.field}>
-            <label className={styles.label} htmlFor="email">Email</label>
-            <input
-              id="email"
-              name="email"
-              type="email"
-              className={styles.input}
-              value={form.email}
-              onChange={handleChange}
-              placeholder="tu@email.com"
-              required
-            />
-          </div>
-          <div className={styles.field}>
-            <label className={styles.label} htmlFor="password">Contraseña</label>
-            <input
-              id="password"
-              name="password"
-              type="password"
-              className={styles.input}
-              value={form.password}
-              onChange={handleChange}
-              placeholder="••••••••"
-              required
-              minLength={6}
-            />
-          </div>
+        <form className={styles.form} onSubmit={handleSubmit} noValidate>
+          {field('username',     'Nombre',     'Mario')}
+          {field('userSurnames', 'Apellidos',  'García López')}
+          {field('email',        'Email',      'tu@email.com', 'email')}
+          {field('password',     'Contraseña', '••••••••',     'password')}
 
-          {error && <p className={styles.error}>{error}</p>}
+          {apiError && <p className={styles.error}>{apiError}</p>}
 
           <button type="submit" className={styles.submit} disabled={loading}>
             {loading ? 'Creando cuenta...' : 'Crear Cuenta'}
