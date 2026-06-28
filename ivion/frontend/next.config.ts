@@ -11,7 +11,10 @@ const securityHeaders = [
   { key: "Strict-Transport-Security", value: "max-age=63072000; includeSubDomains; preload" },
 ];
 
-const BACKEND_URL = process.env.BACKEND_URL ?? 'http://localhost:8081';
+const rawBackendUrl = process.env.BACKEND_URL ?? '';
+const BACKEND_URL = rawBackendUrl.startsWith('http://') || rawBackendUrl.startsWith('https://')
+  ? rawBackendUrl
+  : 'http://localhost:8081';
 
 const nextConfig: NextConfig = {
   output: 'standalone',
