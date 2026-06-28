@@ -11,6 +11,8 @@ const securityHeaders = [
   { key: "Strict-Transport-Security", value: "max-age=63072000; includeSubDomains; preload" },
 ];
 
+const BACKEND_URL = process.env.BACKEND_URL ?? 'http://localhost:8081';
+
 const nextConfig: NextConfig = {
   output: 'standalone',
   allowedDevOrigins: ['172.20.10.3'],
@@ -22,6 +24,14 @@ const nextConfig: NextConfig = {
   },
   async headers() {
     return [{ source: "/(.*)", headers: securityHeaders }];
+  },
+  async rewrites() {
+    return [
+      {
+        source: '/api/:path*',
+        destination: `${BACKEND_URL}/api/:path*`,
+      },
+    ];
   },
 };
 
