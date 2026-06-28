@@ -1,0 +1,19 @@
+version: 2
+updates:
+  - package-ecosystem: "gradle"
+    directory: "/ivionwebsite/ivion/backend/ivion"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    labels:
+      - "dependencies"
+      - "backend"
+
+  - package-ecosystem: "npm"
+    directory: "/ivionwebsite/ivion/frontend"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    labels:
+      - "dependencies"
+      - "frontend"
