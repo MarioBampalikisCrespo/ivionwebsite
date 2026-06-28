@@ -9,9 +9,7 @@ export function middleware(request: NextRequest) {
     ? `'self' 'nonce-${nonce}' 'unsafe-eval'`
     : `'self' 'nonce-${nonce}' 'strict-dynamic'`;
 
-  const connectSrc = isDev
-    ? `'self' http://localhost:8081 https://ivion-production.up.railway.app`
-    : `'self' https://ivion-production.up.railway.app`;
+  const connectSrc = `'self'`;
 
   const csp = [
     "default-src 'self'",
