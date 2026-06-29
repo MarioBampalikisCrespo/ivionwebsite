@@ -103,18 +103,20 @@ export default function MaintenancePage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setTouched({ name: true, phone: true, email: true, device: true, plan: true });
-    if (Object.keys(errors).length > 0) return;
+        const currentErrors = validate(form);
+    if (Object.keys(currentErrors).length > 0) return;
     setLoading(true);
     setApiError('');
     try {
-      await fetch(`${process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:8080'}/api/mail/send`, {
+      const res = await fetch('/api/mail/send', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ to: form.email, name: form.name, type: 'MAINTENANCE', device: form.device, plan: form.plan }),
       });
+      if (!res.ok) throw new Error ('server error');
       setSent(true);
     } catch {
-      setApiError('No se pudo enviar la solicitud. Inténtalo de nuevo.');
+      setApiError('No se pudo enviar el mensaje. Inténtalo de nuevo')
     } finally {
       setLoading(false);
     }
