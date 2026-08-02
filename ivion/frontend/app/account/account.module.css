@@ -130,6 +130,12 @@
   color: #ff9f0a;
 }
 
+.orderState.shipped,
+.orderState.inTransit {
+  background: rgba(134,134,139,0.14);
+  color: var(--tertiary);
+}
+
 .orderItems {
   padding: 16px 20px;
   display: flex;

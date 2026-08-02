@@ -9,21 +9,29 @@ import styles from './account.module.css';
 
 export default function AccountPage() {
   const router = useRouter();
-  const { isAuthenticated, user } = useAuth();
+  const { isAuthenticated, user, initializing } = useAuth();
   const [orders, setOrders] = useState<OrderDTO[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (!isAuthenticated) {
+    if (initializing) return;
+    if (!isAuthenticated || !user) {
       router.push('/auth/login');
       return;
     }
-    if (!user) return;
-    api.get<OrderDTO[]>(`/api/orders/user/${user.id}`)
-      .then(setOrders)
-      .catch(() => setOrders([]))
-      .finally(() => setLoading(false));
-  }, [isAuthenticated, user]);
+
+    let cancelled = false;
+    const loadOrders = () => {
+      api.get<OrderDTO[]>(`/api/orders/user/${user.id}`)
+        .then(data => { if (!cancelled) setOrders(data); })
+        .catch(() => { if (!cancelled) setOrders([]); })
+        .finally(() => { if (!cancelled) setLoading(false); });
+    };
+
+    loadOrders();
+    const interval = setInterval(loadOrders, 5000);
+    return () => { cancelled = true; clearInterval(interval); };
+  }, [initializing, isAuthenticated, user]);
 
   if (!user) return null;
 
@@ -36,13 +44,20 @@ export default function AccountPage() {
       year: 'numeric',
     });
 
-  const stateClass = (state: string) =>
-    state === 'PENDING' ? styles.pending : '';
+  const stateClass = (state: string) => {
+    const map: Record<string, string> = {
+      PENDING: styles.pending,
+      SHIPPED: styles.shipped,
+      IN_TRANSIT: styles.inTransit,
+    };
+    return map[state] ?? '';
+  };
 
   const stateLabel = (state: string) => {
     const map: Record<string, string> = {
       PENDING: 'Pendiente',
       SHIPPED: 'Enviado',
+      IN_TRANSIT: 'En tránsito',
       DELIVERED: 'Entregado',
       CANCELLED: 'Cancelado',
     };
