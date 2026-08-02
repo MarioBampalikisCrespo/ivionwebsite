@@ -1,6 +1,6 @@
 .stack {
   position: fixed;
-  bottom: 32px;
+  bottom: 104px; /* clears the AdminChatFab floating button */
   right: 32px;
   z-index: 9999;
   display: flex;
@@ -50,6 +50,7 @@
 
 @media (max-width: 480px) {
   .stack {
+    bottom: 88px;
     right: 16px;
     left: 16px;
     max-width: unset;

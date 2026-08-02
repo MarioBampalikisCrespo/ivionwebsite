@@ -4,7 +4,7 @@ import { useState, useRef, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { CiUser, CiShoppingCart } from 'react-icons/ci';
+import { CiUser, CiShoppingCart, CiMenuBurger } from 'react-icons/ci';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 import { useAuth } from '../context/AuthContext';
@@ -15,8 +15,10 @@ gsap.registerPlugin(useGSAP);
 export default function Navbar() {
   const [activePanel, setActivePanel] = useState<'productos' | 'servicios' | null>(null);
   const [navHeight, setNavHeight] = useState(80);
+  const [adminMenuOpen, setAdminMenuOpen] = useState(false);
   const navRef = useRef<HTMLElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
+  const adminMenuRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
   const { isAuthenticated, user, logout } = useAuth();
 
@@ -36,6 +38,17 @@ export default function Navbar() {
     window.addEventListener('resize', updateHeight);
     return () => window.removeEventListener('resize', updateHeight);
   }, []);
+
+  useEffect(() => {
+    if (!adminMenuOpen) return;
+    const handleClickOutside = (e: MouseEvent) => {
+      if (adminMenuRef.current && !adminMenuRef.current.contains(e.target as Node)) {
+        setAdminMenuOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [adminMenuOpen]);
 
   const togglePanel = (panel: 'productos' | 'servicios') => {
     setActivePanel((prev) => (prev === panel ? null : panel));
@@ -107,9 +120,45 @@ export default function Navbar() {
                   {(user!.username[0] + (user!.userSurnames?.[0] ?? '')).toUpperCase()}
                 </span>
               </button>
-              <button className={styles.navButton} onClick={handleLogout}>
-                Salir
-              </button>
+              {user?.role === 'ADMIN' ? (
+                <div className={styles.adminMenuWrap} ref={adminMenuRef}>
+                  <button
+                    className={styles.loginStyle}
+                    onClick={() => setAdminMenuOpen(prev => !prev)}
+                    aria-label="Menú de administración"
+                  >
+                    <CiMenuBurger className={styles.iconStyle} />
+                  </button>
+                  {adminMenuOpen && (
+                    <div className={styles.adminDropdown}>
+                      <Link
+                        href="/account/admin/products"
+                        className={styles.adminDropdownItem}
+                        onClick={() => setAdminMenuOpen(false)}
+                      >
+                        Gestionar productos
+                      </Link>
+                      <Link
+                        href="/account/admin/users"
+                        className={styles.adminDropdownItem}
+                        onClick={() => setAdminMenuOpen(false)}
+                      >
+                        Gestionar usuarios
+                      </Link>
+                      <button
+                        className={styles.adminDropdownItem}
+                        onClick={() => { setAdminMenuOpen(false); handleLogout(); }}
+                      >
+                        Salir
+                      </button>
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <button className={styles.navButton} onClick={handleLogout}>
+                  Salir
+                </button>
+              )}
             </div>
           ) : (
             <button className={styles.loginStyle} onClick={handleUserClick}>

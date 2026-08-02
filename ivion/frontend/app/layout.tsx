@@ -5,6 +5,7 @@ import './globals.css';
 import { AuthProvider } from '../context/AuthContext';
 import Navbar from '../components/Navbar';
 import AdminChatNotifier from '../components/AdminChatNotifier';
+import AdminChatFab from '../components/AdminChatFab';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -37,6 +38,7 @@ export default async function RootLayout({
         <AuthProvider>
           <Navbar />
           <AdminChatNotifier />
+          <AdminChatFab />
           {children}
         </AuthProvider>
       </body>

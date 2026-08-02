@@ -1,0 +1,31 @@
+.fab {
+  position: fixed;
+  bottom: 32px;
+  right: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--foreground);
+  cursor: pointer;
+  z-index: 9998;
+  text-decoration: none;
+  opacity: 0.82;
+  transition: opacity 0.15s, transform 0.15s;
+}
+
+.fab:hover {
+  opacity: 1;
+  transform: scale(1.08);
+}
+
+.icon {
+  width: 32px;
+  height: 32px;
+}
+
+@media (max-width: 480px) {
+  .fab {
+    right: 16px;
+    bottom: 16px;
+  }
+}

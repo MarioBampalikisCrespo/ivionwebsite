@@ -9,6 +9,10 @@ import { useGSAP } from '@gsap/react';
 import styles from './page.module.css';
 
 gsap.registerPlugin(ScrollTrigger, useGSAP);
+// Mobile browsers resize the viewport as the address bar shows/hides while
+// scrolling, which otherwise triggers a ScrollTrigger recalculation mid-scroll
+// and can leave "once: true" reveal animations stuck at their opacity:0 start.
+ScrollTrigger.config({ ignoreMobileResize: true });
 
 const CATEGORIES = [
   { name: 'iPhone',     href: '/buy/products?category=1' },
@@ -111,7 +115,6 @@ export default function Home() {
         scrollTrigger: { trigger: categoriesGridRef.current, start: 'top 80%', once: true },
       });
     });
-    ScrollTrigger.refresh();
   }, { scope: categoriesGridRef });
 
   return (
