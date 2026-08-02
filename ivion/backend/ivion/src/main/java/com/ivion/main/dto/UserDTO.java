@@ -12,8 +12,10 @@ public class UserDTO {
     private String username;
     private String userSurnames;
     private String email;
+    private String role;
 
     public static UserDTO from(User u) {
-        return new UserDTO(u.getId(), u.getUsername(), u.getUserSurnames(), u.getEmail());
+        return new UserDTO(u.getId(), u.getUsername(), u.getUserSurnames(), u.getEmail(),
+                u.isAdmin() ? "ADMIN" : "USER");
     }
 }

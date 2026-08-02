@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import { api } from '../../lib/api';
 import { OrderDTO } from '../../lib/types';
 import { useAuth } from '../../context/AuthContext';
@@ -91,6 +92,20 @@ export default function AccountPage() {
           </div>
         </div>
       </div>
+
+      {user.role === 'ADMIN' && (
+        <div className={styles.section}>
+          <h2 className={styles.sectionTitle}>Administración</h2>
+          <div className={styles.adminLinks}>
+            <Link href="/account/admin/products" className={styles.adminLink}>
+              Gestionar productos
+            </Link>
+            <Link href="/account/admin/users" className={styles.adminLink}>
+              Gestionar usuarios
+            </Link>
+          </div>
+        </div>
+      )}
 
       <div className={styles.section}>
         <h2 className={styles.sectionTitle}>Mis Pedidos</h2>

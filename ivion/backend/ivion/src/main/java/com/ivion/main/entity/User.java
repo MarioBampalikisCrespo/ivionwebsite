@@ -32,9 +32,16 @@ public class User {
     @Column(name = "locked_until")
     private LocalDateTime lockedUntil;
 
+    @Column(name = "role", length = 20)
+    private String role = "USER";
+
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     private Cart cart;
 
     @OneToMany(mappedBy = "user")
     private List<Order> orders;
+
+    public boolean isAdmin() {
+        return "ADMIN".equals(role);
+    }
 }

@@ -1,8 +1,11 @@
 package com.ivion.main.controller;
 
 import com.ivion.main.dto.ProductDTO;
+import com.ivion.main.dto.ProductRequest;
 import com.ivion.main.service.ProductService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
@@ -29,5 +32,21 @@ public class ProductController {
     @GetMapping("/category/{categoryId}")
     public List<ProductDTO> getByCategory(@PathVariable Integer categoryId) {
         return productService.findByCategoryId(categoryId);
+    }
+
+    @PostMapping
+    public ResponseEntity<ProductDTO> create(@Valid @RequestBody ProductRequest request) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(productService.create(request));
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<ProductDTO> update(@PathVariable Integer id, @Valid @RequestBody ProductRequest request) {
+        return ResponseEntity.ok(productService.update(id, request));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable Integer id) {
+        productService.delete(id);
+        return ResponseEntity.noContent().build();
     }
 }

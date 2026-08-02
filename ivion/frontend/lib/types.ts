@@ -35,6 +35,25 @@ export interface UserDTO {
   username: string;
   userSurnames: string;
   email: string;
+  role: 'USER' | 'ADMIN';
+}
+
+export interface UserUpdateRequest {
+  username: string;
+  userSurnames: string;
+  email: string;
+  password: string | null;
+}
+
+export interface ProductRequest {
+  productName: string;
+  productDescription: string;
+  productMemory: string;
+  productStorage: string;
+  productImage: string;
+  productPrice: number;
+  categoryId: number;
+  colourId: number | null;
 }
 
 export interface CartItemDTO {

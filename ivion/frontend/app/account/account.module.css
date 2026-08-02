@@ -66,6 +66,29 @@
   background: var(--surface);
 }
 
+.adminLinks {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.adminLink {
+  display: inline-block;
+  padding: 12px 22px;
+  background: var(--blue);
+  color: #fff;
+  border-radius: 980px;
+  font-size: 15px;
+  font-weight: 500;
+  text-decoration: none;
+  letter-spacing: -0.01em;
+  transition: background 0.2s;
+}
+
+.adminLink:hover {
+  background: var(--blue-hover);
+}
+
 .infoLabel {
   font-size: 11px;
   color: var(--tertiary);
