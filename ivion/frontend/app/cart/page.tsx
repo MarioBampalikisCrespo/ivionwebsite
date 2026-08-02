@@ -50,7 +50,7 @@ function validateCard(card: { number: string; name: string; expiry: string; cvv:
 
 export default function CartPage() {
   const router = useRouter();
-  const { isAuthenticated, user } = useAuth();
+  const { isAuthenticated, user, initializing } = useAuth();
   const [cart, setCart] = useState<CartDTO | null>(null);
   const [loading, setLoading] = useState(true);
   const [removing, setRemoving] = useState<number | null>(null);
@@ -85,12 +85,13 @@ export default function CartPage() {
   };
 
   useEffect(() => {
+    if (initializing) return;
     if (!isAuthenticated || !user) {
-      if (!isAuthenticated) router.push('/auth/login');
+      router.push('/auth/login');
       return;
     }
     loadCart(user.id);
-  }, [isAuthenticated, user?.id]);
+  }, [initializing, isAuthenticated, user?.id]);
 
   const openCheckout = () => {
     setStep('address');

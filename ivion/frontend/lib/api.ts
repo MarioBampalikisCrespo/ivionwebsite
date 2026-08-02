@@ -6,24 +6,37 @@ function getXsrfToken(): string {
   return match ? decodeURIComponent(match[1]) : '';
 }
 
-async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
-  const method = (options.method ?? 'GET').toUpperCase();
-  const xsrf = getXsrfToken();
-
+function buildHeaders(method: string, options: RequestInit): Record<string, string> {
   const headers: Record<string, string> = {
     'Content-Type': 'application/json',
     ...(options.headers as Record<string, string>),
   };
-
+  const xsrf = getXsrfToken();
   if (['POST', 'PUT', 'DELETE', 'PATCH'].includes(method) && xsrf) {
     headers['X-XSRF-TOKEN'] = xsrf;
   }
+  return headers;
+}
 
-  const res = await fetch(`${BASE_URL}${path}`, {
+async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
+  const method = (options.method ?? 'GET').toUpperCase();
+
+  let res = await fetch(`${BASE_URL}${path}`, {
     ...options,
-    headers,
+    headers: buildHeaders(method, options),
     credentials: 'include',
   });
+
+  // The very first write of a session can 403 before the browser has picked up
+  // the XSRF-TOKEN cookie (it's only issued lazily). That failed response still
+  // plants a fresh cookie, so retry once transparently before surfacing an error.
+  if (res.status === 403 && method !== 'GET') {
+    res = await fetch(`${BASE_URL}${path}`, {
+      ...options,
+      headers: buildHeaders(method, options),
+      credentials: 'include',
+    });
+  }
 
   if (!res.ok) {
     const error = await res.json().catch(() => ({ message: res.statusText }));

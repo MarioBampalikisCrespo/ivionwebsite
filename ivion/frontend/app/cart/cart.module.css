@@ -377,6 +377,7 @@
   display: flex;
   flex-direction: column;
   gap: 6px;
+  min-width: 0;
 }
 
 .modalLabel {
@@ -387,6 +388,7 @@
 }
 
 .modalInput {
+  width: 100%;
   padding: 11px 17px;
   border: 1px solid var(--border);
   border-radius: 12px;
