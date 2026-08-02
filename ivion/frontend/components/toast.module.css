@@ -29,6 +29,16 @@
   opacity: 1;
 }
 
+.toastError .label,
+.toastError .check {
+  color: var(--danger);
+}
+
+.toastError .check {
+  background: var(--danger);
+  color: #fff;
+}
+
 .imageBox {
   width: 52px;
   height: 52px;

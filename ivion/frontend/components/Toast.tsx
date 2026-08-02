@@ -8,10 +8,11 @@ import styles from './toast.module.css';
 interface ToastProps {
   message: string;
   image?: string | null;
+  variant?: 'success' | 'error';
   onClose: () => void;
 }
 
-export default function Toast({ message, image, onClose }: ToastProps) {
+export default function Toast({ message, image, variant = 'success', onClose }: ToastProps) {
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
@@ -27,9 +28,9 @@ export default function Toast({ message, image, onClose }: ToastProps) {
   }, [onClose]);
 
   return (
-    <div className={`${styles.toast} ${visible ? styles.toastVisible : ''}`}>
+    <div className={`${styles.toast} ${visible ? styles.toastVisible : ''} ${variant === 'error' ? styles.toastError : ''}`}>
       <div className={styles.imageBox}>
-        {productImageSrc(image ?? null) ? (
+        {variant === 'success' && productImageSrc(image ?? null) ? (
           <Image
             src={productImageSrc(image ?? null)!}
             alt=""
@@ -37,13 +38,13 @@ export default function Toast({ message, image, onClose }: ToastProps) {
             style={{ objectFit: 'contain', padding: '6px' }}
           />
         ) : (
-          <span style={{ fontSize: 22 }}>💻</span>
+          <span style={{ fontSize: 22 }}>{variant === 'error' ? '⚠️' : '💻'}</span>
         )}
       </div>
       <div className={styles.body}>
         <span className={styles.label}>
-          <span className={styles.check}>✓</span>
-          Añadido al carrito
+          <span className={styles.check}>{variant === 'error' ? '!' : '✓'}</span>
+          {variant === 'error' ? 'Error' : 'Añadido al carrito'}
         </span>
         <span className={styles.message}>{message}</span>
       </div>

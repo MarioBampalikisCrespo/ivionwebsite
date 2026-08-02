@@ -19,7 +19,7 @@ export default function ProductDetailPage() {
   const [error, setError] = useState('');
   const [quantity, setQuantity] = useState(1);
   const [adding, setAdding] = useState(false);
-  const [toast, setToast] = useState<{ message: string; image: string | null } | null>(null);
+  const [toast, setToast] = useState<{ message: string; image: string | null; variant: 'success' | 'error' } | null>(null);
   const [selectedChip, setSelectedChip] = useState<string | null>(null);
   const [selectedSize, setSelectedSize] = useState<string | null>(null);
   const [selectedStorage, setSelectedStorage] = useState<string | null>(null);
@@ -95,7 +95,7 @@ export default function ProductDetailPage() {
   const handleAddToCart = async () => {
     if (!isAuthenticated) { router.push('/auth/login'); return; }
     if (hasVariants && !selectedVariant) {
-      setToast({ message: 'Selecciona una configuración primero.', image: null });
+      setToast({ message: 'Selecciona una configuración primero.', image: null, variant: 'error' });
       return;
     }
     setAdding(true);
@@ -105,9 +105,9 @@ export default function ProductDetailPage() {
         `/api/cart/user/${user!.id}/add/${product!.id}?quantity=${quantity}${variantParam}`,
         null
       );
-      setToast({ message: product!.productName, image: product!.productImage });
+      setToast({ message: product!.productName, image: product!.productImage, variant: 'success' });
     } catch (err) {
-      setToast({ message: err instanceof Error ? err.message : 'Error al añadir', image: null });
+      setToast({ message: err instanceof Error ? err.message : 'Error al añadir', image: null, variant: 'error' });
     } finally {
       setAdding(false);
     }
@@ -267,7 +267,7 @@ export default function ProductDetailPage() {
       </div>
     </div>
 
-    {toast && <Toast message={toast.message} image={toast.image} onClose={() => setToast(null)} />}
+    {toast && <Toast message={toast.message} image={toast.image} variant={toast.variant} onClose={() => setToast(null)} />}
     </>
   );
 }
