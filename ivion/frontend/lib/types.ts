@@ -38,6 +38,13 @@ export interface UserDTO {
   role: 'USER' | 'ADMIN';
 }
 
+export interface ChatMessageDTO {
+  id: number;
+  senderName: string;
+  content: string;
+  createdAt: string;
+}
+
 export interface UserUpdateRequest {
   username: string;
   userSurnames: string;

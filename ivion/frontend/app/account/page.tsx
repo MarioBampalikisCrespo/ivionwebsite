@@ -103,6 +103,9 @@ export default function AccountPage() {
             <Link href="/account/admin/users" className={styles.adminLink}>
               Gestionar usuarios
             </Link>
+            <Link href="/account/admin/chat" className={styles.adminLink}>
+              Chat de administradores
+            </Link>
           </div>
         </div>
       )}

@@ -18,5 +18,5 @@ export function useAdminGuard() {
     }
   }, [initializing, isAuthenticated, user, router]);
 
-  return { ready: !initializing && isAuthenticated && user?.role === 'ADMIN' };
+  return { ready: !initializing && isAuthenticated && user?.role === 'ADMIN', user };
 }
