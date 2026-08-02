@@ -72,6 +72,11 @@ export default function AdminChatPage() {
             <p className={styles.empty}>Todavía no hay mensajes. Escribe el primero.</p>
           )}
           {messages.map(msg => {
+            if (msg.system) {
+              return (
+                <div key={msg.id} className={styles.systemLine}>{msg.content}</div>
+              );
+            }
             const isOwn = msg.senderName === user?.username;
             return (
               <div key={msg.id} className={`${styles.messageRow} ${isOwn ? styles.own : ''}`}>

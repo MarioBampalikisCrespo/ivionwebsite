@@ -24,4 +24,9 @@ public class ChatMessage {
 
     @Column(nullable = false)
     private LocalDateTime createdAt;
+
+    // Column named system_message, not "system" — SYSTEM is a reserved word in MySQL 8+
+    // (temporal table support), which broke both schema generation and every query.
+    @Column(name = "system_message", nullable = false)
+    private boolean systemMessage = false;
 }

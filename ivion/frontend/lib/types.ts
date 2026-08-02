@@ -43,6 +43,7 @@ export interface ChatMessageDTO {
   senderName: string;
   content: string;
   createdAt: string;
+  system: boolean;
 }
 
 export interface UserUpdateRequest {

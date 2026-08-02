@@ -13,8 +13,9 @@ public class ChatMessageDTO {
     private String senderName;
     private String content;
     private LocalDateTime createdAt;
+    private boolean system;
 
     public static ChatMessageDTO from(ChatMessage m) {
-        return new ChatMessageDTO(m.getId(), m.getSenderName(), m.getContent(), m.getCreatedAt());
+        return new ChatMessageDTO(m.getId(), m.getSenderName(), m.getContent(), m.getCreatedAt(), m.isSystemMessage());
     }
 }
