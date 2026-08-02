@@ -27,6 +27,9 @@ public class ChatMessage {
 
     // Column named system_message, not "system" — SYSTEM is a reserved word in MySQL 8+
     // (temporal table support), which broke both schema generation and every query.
-    @Column(name = "system_message", nullable = false)
+    // Explicit DEFAULT so ALTER TABLE ADD COLUMN ... NOT NULL succeeds on Postgres even
+    // when the table already has rows (Postgres refuses a NOT NULL add with no default
+    // otherwise); works the same way on MySQL since it also accepts DEFAULT FALSE.
+    @Column(name = "system_message", nullable = false, columnDefinition = "boolean not null default false")
     private boolean systemMessage = false;
 }
