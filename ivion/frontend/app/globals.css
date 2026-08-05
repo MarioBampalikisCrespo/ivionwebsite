@@ -22,13 +22,15 @@ html {
   scroll-behavior: smooth;
 }
 
-html, body {
-  height: 100%;
-  max-width: 100vw;
-  overflow-x: hidden;
-}
-
+/* overflow-x: hidden on html/body (+ height:100%) turns <body> into its own
+   scroll container on real mobile devices (dynamic address-bar viewport),
+   so window.scrollY never advances and every GSAP ScrollTrigger (which
+   defaults to scroller: window) stays stuck at progress 0 — reveal
+   animations never fire. "clip" avoids the overflow-y:auto side effect
+   that "hidden" forces per spec, without reintroducing horizontal scroll. */
 body {
+  max-width: 100vw;
+  overflow-x: clip;
   color: var(--foreground);
   background: var(--background);
   font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', Arial, sans-serif;
